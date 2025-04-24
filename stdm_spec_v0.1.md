@@ -2,7 +2,7 @@
 
 ## Authors
 
-Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, Dave Peton^2^, Jonathan Yu^2^, Jean-Michel Perraud^2^, Carmel Pollino^3^
+Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan Yu^2^, Jean-Michel Perraud^2^, Carmel Pollino^3^
 
 ^1^Corresponding Author: Ben.Leighton@csiro.au  
 ^2^CSIRO Environmental Informatics  
