@@ -266,7 +266,7 @@ USER_PROMPT_TEMPLATE: This interactive report (STDM) requests permission to use 
 </body>
 </html>
 ```
-9. Future Directions
+9.  Future Directions
 * Formal standardization (e.g., W3C note, RFC-like process).
 * More sophisticated instruction syntax (e.g., conditional logic, state management variables for UI persistence).
 * Standardized error handling directives and reporting (including reasons for fallback to Degraded mode).
