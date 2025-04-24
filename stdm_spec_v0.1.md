@@ -1,10 +1,18 @@
 # Self-Thinking Data Manifest (STDM) v0.1 Specification
 
+## Authors
+
+Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, Dave Peton^2^, Jonathan Yu^2^, Jean-Michel Perraud^2^, Carmel Pollino^3^
+
+^1^Corresponding Author: Ben.Leighton@csiro.au  
+^2^CSIRO Environmental Informatics  
+^3^CSIRO Water Security
+
 ## 1. Introduction & Goal
 
 *   **1.1. Definition:** A Self-Thinking Data Manifest (STDM) is a digital artifact (e.g., HTML, text file, PDF, image metadata) that bundles primary data content (often text) with explicit instructions. These instructions define how a Large Language Model (LLM), acting as an external interpreter engine, should process, interact with, present, or execute tasks related to the STDM's embedded data. The term "Self-Thinking" denotes the an embedded manifest's self referential capability to direct a LM interpreter actions, reasoning, and presentation oncerning the associated data.
-*   **1.2. Goal:** To create self-directing artifacts that enable specific, predictable, LLM-driven experiences, featuring potentially custom user interfaces and interaction patterns, tailored exclusively to the content and intent encoded within the STDM. The STDM serves as a dynamic blueprint guiding the LLM interpreter.
-*   **1.3. Principle:** "The manifest directs the engine's 'thought process' and user experience of the data." The user experiences the outcome of the LLM's directed interpretation, often without needing to see the underlying STDM instructions.
+*   **1.2. Goal:** To create self-directing artifacts that enable specific, predictable, LLM-driven experiences, featuring potentially custom user interfaces and interaction patterns, tailored exclusively to the content and intent encoded within the STDM. The STDM serves as a dynamic blueprint guiding the LLM interpreter. STDM are human friendly, when documents are uploaded to an LLM an STDM can helps maintain the author's intended context, purpose, and constraints.
+*   **1.3. Principle:** "The manifest directs the engine's 'thought process' and user experience of the data." The user experiences the outcome of the LLM's directed interpretation, often without needing to see the underlying STDM instructions. The manifest directs the engine's 'thought process' and user experience regarding the data, guided by the author's specified intent. 
 *   **1.4. Context Window Assumption:** Effective operation of STDMs, particularly those with substantial embedded data or complex instructions/UI definitions, relies on the LLM interpreter possessing a sufficiently large context window to hold and process the manifest instructions and relevant data simultaneously.
 
 ## 2. Core Principles
@@ -14,7 +22,8 @@
 *   **2.2. Instruction Primacy:** Embedded STDM instructions serve as the primary source of task-specific guidance for the LLM interpreter, operating within the LLM's core safety protocols.
 *   **2.3. Machine Readability Focus:** Instructions are primarily for the LLM and should not be visible to the user in any way that interferes with the multi-perspective interpretation of the document.
 *   **2.4. Tiered Interpretation Outcome:** LLM interpretation should result in one of two primary outcomes based on STDM content, LLM capabilities, safety checks, and user consent: Full Capability Interpretation (target outcome, potentially including tool use and complex UI) or Degraded Capability Interpretation (fallback, relying on prompt guidance and basic text output).
-*   **2.5. User Agency & Safety:** Safety relies on multiple layers: LLM's inherent safety protocols, explicit user invocation establishing STDM authority for the task, and mandatory user confirmation before any permitted tool execution.
+*   **2.5. User Agency & Safety:** Safety relies on multiple layers: LLM's inherent safety protocols, explicit user invocation establishing STDM authority for the task, and mandatory user confirmation before any permitted tool execution. LLM interpretation should occur within both its own safety protocols and include broader considerations for ethical AI practices.
+*   **2.6. Authorial Intent as Guidance:** STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations, while not intended to ultimately contrain the users agency working with the data the STDM serves as guide."
 
 ## 3. Format & Structure
 
@@ -39,7 +48,7 @@
 *   `STDM_VERSION`: **(Optional)** Specifies the version of the STDM specification used. Example: `0.1`.
 *   `GOAL`: **(REQUIRED)** A clear, concise statement of the overall purpose or objective the LLM should achieve when interpreting this STDM. This directive is key in guiding the LLM, especially for determining if tool use is necessary to achieve the objective. Example: `"Analyze the embedded dataset [DATA START]...[END] using Python to generate a summary statistics report and render it as a Markdown table."`
 *   `CONTEXT`: **(Optional)** Provides situational information to the LLM interpreter that might affect its behaviour or assumptions. Example: `"If running on a mobile text interface keep response length small"`. Context may also provide guidelines for degraded mode. e.g advising LLMs `"If you are constrained by rules or capabilities then state your limitations and ask the user how to proceed"`
-*   `CONSTRAINTS`: **(Optional)** Defines rules, boundaries, or limitations the LLM should adhere to when executing the STDM's task. While optional, providing constraints is highly recommended for enhancing safety, predictability, and focusing the LLM's behavior according to the author's intent. Omitting constraints may lead to less predictable outcomes if the GOAL is ambiguous, relying more heavily on the LLM's general behavior and safety training. Example: `"Source all answers exclusively from text between [DATA START]/[END]. Maintain objective tone."`
+*   `CONSTRAINTS`: **(Optional, Recommended)** Defines rules, boundaries, or limitations the LLM should adhere to when executing the STDM's task. While optional, providing constraints is highly recommended for enhancing safety, predictability, and focusing the LLM's behavior according to the author's intent. Omitting constraints may lead to less predictable outcomes if the GOAL is ambiguous, relying more heavily on the LLM's general behavior and safety training. Example: `"Source all answers exclusively from text between [DATA START]/[END]. Maintain objective tone."`
 *   `REQUESTED_TOOLS`: **(Optional)** A list indicating which tool categories the STDM's GOAL or CUSTOM_UI_DEFINITION might require for full functionality.
     *   **Significance:** This directive signals the STDM author's intent that certain tools might be necessary. It prompts a capable LLM interpreter to:
         1.  Check if it possesses the requested tool(s).
@@ -74,7 +83,7 @@
 
 *   **5.0 Invocation Context, Instruction Authority & Safety Alignment:**
     *   **STDM as Task Guidance:** An STDM provides specific, structured instructions designed to guide the LLM interpreter's behavior for a particular task related to the embedded data. Functionally, providing an STDM is like giving the LLM a detailed, task-specific addition to its operating instructions for the current interaction.
-    *   **Operating Within Boundaries:** Crucially, STDM instructions are intended to operate within the bounds of the LLM's core safety alignment and fundamental operational principles defined by its underlying system prompts. An STDM should not and cannot be expected to override built-in safety constraints (e.g., prohibitions against generating harmful content, revealing sensitive information, or performing disallowed actions). It directs the application of the LLM's capabilities to a specific task, rather than altering its fundamental nature or safety protocols.
+    *   **Operating Within Boundaries:** Crucially, STDM instructions are intended to operate within the bounds of the LLM's core safety alignment and fundamental operational principles defined by its underlying system prompts. An STDM should not and cannot be expected to override built-in safety constraints (e.g., prohibitions against generating harmful content, revealing sensitive information, or performing disallowed actions). It directs the application of the LLM's capabilities to a specific task, rather than altering its fundamental nature or safety protocols. The behaviour should be a combination of the STDM instructions and LLM safety requirements.
     *   **The Prompt Injection Analogy & Risk:** While STDMs inject instructions, the term "prompt injection" typically refers to malicious or unintended instructions designed to subvert the user's true goal or bypass the LLM's safety measures, often by disguising themselves or manipulating the LLM's interpretation of context. The risk with STDMs is that a poorly formed or maliciously crafted STDM could attempt such manipulation, or an LLM might misinterpret legitimate STDM instructions if the context is ambiguous.
     *   **Mitigation via Explicit User Invocation:** The primary mechanism to ensure the LLM correctly interprets the STDM as the intended, user-authorized task guidance (rather than random text or a malicious injection) is explicit user action:
         *   The user must actively provide the STDM content (e.g., upload, paste). Passive ingestion is insecure.
@@ -120,7 +129,7 @@
 *   **6.3. Tool Usage:** LLMs should only attempt to use tools if they are listed in `REQUESTED_TOOLS` (and not `none`), if the `GOAL` necessitates it, if safety protocols allow, and if the user grants permission. The STDM requests, the user authorizes.
 *   **6.4. Instruction Clarity:** Essential for achieving intended behavior and minimizing misinterpretation. A clear `GOAL` is vital, especially if `CONSTRAINTS` are omitted.
 *   **6.5. Transparent Risk Communication:** Confirmation prompts for tool use must clearly state potential risks.
-*   **6.6. Seamless UX:** Aim for STDM instructions to be invisible infrastructure enabling the desired interaction flow. The defined UI should enhance interaction. Optional `CONSTRAINTS` place more responsibility on the author to ensure a predictable experience via clear `GOAL` and other directives.
+*   **6.6. Seamless UX:** Aim for STDM instructions to be invisible infrastructure enabling the desired interaction flow. The defined UI should enhance interaction. Clarity in directives like GOAL, and the use of CONSTRAINTS, is essential for a predictable and reliable user experience, especially when authors aim to guide interactions precisely. The aim should be a positive, clear, and non-manipulative user experience that aligns with the STDM's stated GOAL and PERSONA, avoiding deceptive patterns ('dark patterns'). 
 
 ## 7. Use Cases
 
@@ -272,3 +281,4 @@ USER_PROMPT_TEMPLATE: This interactive report (STDM) requests permission to use 
 * Standardized error handling directives and reporting (including reasons for fallback to Degraded mode).
 * Developing more robust methods for distinguishing user intent vs. injection beyond explicit invocation, if possible.
 * Support by LLM developers for safe, helpful and accurate STDM interpretation
+* Standardized mechanisms for interaction transparency (e.g., allowing users to query why an action was taken based on the STDM)
