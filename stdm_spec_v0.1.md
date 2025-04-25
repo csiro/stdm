@@ -2,27 +2,36 @@
 
 ## Authors
 
-Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan Yu^2^, Jean-Michel Perraud^2^, Carmel Pollino^3^
+Ben Leighton^1,2^, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan Yu^2^, Jean-Michel Perraud^2^, Carmel Pollino^3^
 
 ^1^Corresponding Author: Ben.Leighton@csiro.au  
 ^2^CSIRO Environmental Informatics  
 ^3^CSIRO Water Security
 
+## Version 0.1 - Draft for Discussion & Experimentation
+
+This document specifies the Self-Thinking Data Manifest (STDM) v0.1, an initial exploration into embedding dynamic capabilities within data artifacts using Large Language Models (LLMs). It aims to unlock new interactive and analytical possibilities, illustrated by the accompanying experimental examples.
+
+Guiding LLMs reliably presents challenges, including known security risks like prompt injection. STDM addresses this not by ignoring risks, but by proposing a defined structure (explicit directives, goals, constraints) to move beyond ad-hoc prompting towards more transparent, author-guided, and potentially programmable LLM interactions. The goal is to enhance data utility, preserve authorial intent, and increase predictability.
+
+Recognizing the risks, STDM v0.1 incorporates specific mitigation strategies like explicit user invocation and mandatory consent gates for tool use. However, this specification is a foundational proposal, not a solution. Robust safety, reliable interpretation, and the evolution towards sophisticated LLM-data interaction require rigorous analysis, community collaboration, and further innovation. We welcome feedback and critical evaluation.
+
+This html version of this specification is itself an experimental STDM and additional examples are provided both in the specification and the accompanying repository
+
 ## 1. Introduction & Goal
 
 *   **1.1. Definition:** A Self-Thinking Data Manifest (STDM) is a digital artifact (e.g., HTML, text file, PDF, image metadata) that bundles primary data content (often text) with explicit instructions. These instructions define how a Large Language Model (LLM), acting as an external interpreter engine, should process, interact with, present, or execute tasks related to the STDM's embedded data. The term "Self-Thinking" denotes the an embedded manifest's self referential capability to direct a LM interpreter actions, reasoning, and presentation oncerning the associated data.
-*   **1.2. Goal:** To create self-directing artifacts that enable specific, predictable, LLM-driven experiences, featuring potentially custom user interfaces and interaction patterns, tailored exclusively to the content and intent encoded within the STDM. The STDM serves as a dynamic blueprint guiding the LLM interpreter. STDM are human friendly, when documents are uploaded to an LLM an STDM can helps maintain the author's intended context, purpose, and constraints.
+*   **1.2. Goal:** To create self-directing artifacts that enable specific, predictable, safe, LLM-driven experiences, featuring potentially custom user interfaces and interaction patterns, tailored exclusively to the content and intent encoded within the STDM. The STDM serves as a dynamic blueprint guiding the LLM interpreter. STDM helps maintain an author's intended context, purpose, and constraints.
 *   **1.3. Principle:** "The manifest directs the engine's 'thought process' and user experience of the data." The user experiences the outcome of the LLM's directed interpretation, often without needing to see the underlying STDM instructions. The manifest directs the engine's 'thought process' and user experience regarding the data, guided by the author's specified intent. 
 *   **1.4. Context Window Assumption:** Effective operation of STDMs, particularly those with substantial embedded data or complex instructions/UI definitions, relies on the LLM interpreter possessing a sufficiently large context window to hold and process the manifest instructions and relevant data simultaneously.
 
 ## 2. Core Principles
 
-*   **2.1 Multi-Perspective:** STDM often can be used without an LLM and will appear as a regular and informative data artifact. e.g A STDM enabled scientific paper PDF might be useful treated as a regular scientific article, read, printed etc. however inputting into an LLM should activate the additional Self Thinking capabilities.
 *   **2.1. Data-Instruction-Presentation Symbiosis:** Data, interaction logic, and presentation/UI definition are linked but often loosely coupled within the STDM.
 *   **2.2. Instruction Primacy:** Embedded STDM instructions serve as the primary source of task-specific guidance for the LLM interpreter, operating within the LLM's core safety protocols.
-*   **2.3. Machine Readability Focus:** Instructions are primarily for the LLM and should not be visible to the user in any way that interferes with the multi-perspective interpretation of the document.
+*   **2.3. Machine Readability Focus:** Instructions are primarily for the LLM and while they should not be visiblto the user in any way that interferes with the multi-perspective interpretation of the document, they should be accessible if for review and the user should be aware of the presence of an STDM.
 *   **2.4. Tiered Interpretation Outcome:** LLM interpretation should result in one of two primary outcomes based on STDM content, LLM capabilities, safety checks, and user consent: Full Capability Interpretation (target outcome, potentially including tool use and complex UI) or Degraded Capability Interpretation (fallback, relying on prompt guidance and basic text output).
-*   **2.5. User Agency & Safety:** Safety relies on multiple layers: LLM's inherent safety protocols, explicit user invocation establishing STDM authority for the task, and mandatory user confirmation before any permitted tool execution. LLM interpretation should occur within both its own safety protocols and include broader considerations for ethical AI practices.
+*   **2.5. User Agency & Safety:** Safety relies on multiple layers, an LLM's inherent safety protocols, explicit user invocation establishing STDM authority for the task, and mandatory user confirmation before any permitted tool execution. In interpreting an STDM an LLM should apply its own safety protocols in addition to those built into the STDM. 
 *   **2.6. Authorial Intent as Guidance:** STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations, while not intended to ultimately contrain the users agency working with the data the STDM serves as guide."
 
 ## 3. Format & Structure
@@ -33,11 +42,11 @@ Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan
 *   **3.2. Instruction Block:**
     *   **Content:** Contains natural language instructions, directives (Section 4), constraints, and potentially embedded configuration or template data (including UI definitions).
     *   **Format:** Markdown is recommended for readability if humans need to inspect it, but the primary consumer is the LLM. Plain text is sufficient.
-*   **3.3. Data Integration & Payload Emphasis:**
+*   **3.3. Data Integration & Payload :**
     *   **Option A (Delimited):** Use optional `[DATA START]` / `[DATA END]` markers for specific data segments within a larger file.
     *   **Option B (Implicit):** Instructions refer to the data contextually (e.g., "the main text body," "the HTML content," "the following code block," "the entire document outside the STDM block").
     *   **Emphasis on Text Payloads:** Due to current LLM capabilities, the most reliable data payloads within an STDM are typically textual representations (e.g., plain text, Markdown, code, textualized CSV/JSON). While the STDM container can be various file types, reliably interpreting complex embedded binary data formats directly is often problematic for LLMs compared to processing extracted text content present within their context window.
-*   **3.4. Embedding Strategies (Machine Focus):**
+*   **3.4. Instruction Embedding:**
     *   **HTML:** Use HTML comments (`<!-- ... -->`) or a non-rendering `<script type="application/stdm-instructions">`.
     *   **Text/Code (.txt, .md, .py, .js, .conf, etc.):** Use standard comment syntax (`#`, `//`, `/* ... */`).
     *   **PDF:** Embed in metadata (XMP, custom fields with `STDM:` prefix). Alternatively, embed as a non-rendering text layer (potentially using very small or transparent text, though accessibility implications should be considered). Relies heavily on LLM's PDF text extraction.
@@ -98,16 +107,15 @@ Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan
         *   Planned actions align with LLM's core safety protocols.
     *   **Process Steps:**
         1.  **Detect & Parse:** Reliably identify and parse the `[STDM START]...[STDM END]` block.
-        2.  **Plan:** Analyze `GOAL`, `CUSTOM_UI_DEFINITION`, etc., to determine actions. Check if planned actions require tools listed in `REQUESTED_TOOLS` and if the LLM possesses those capabilities. Verify plan against internal safety protocols. If safety violated, fallback to Degraded (5.2) or refuse, informing the user.
-        3.  **Render Initial UI:** Generate and render initial UI per `CUSTOM_UI_DEFINITION` or `INITIAL_OUTPUT`.
+        2.  **Plan:** Analyze `GOAL`, `CUSTOM_UI_DEFINITION`, etc., to determine actions. Check if planned actions require tools listed in `REQUESTED_TOOLS` and if the LLM possesses those capabilities. Verify plan against internal safety protocols. Ensure that a User has granted initial consent. If safety violated, fallback to Degraded (5.2) or refuse, informing the user.
         4.  **Confirmation Request (Tool Use Gate):** If the verified plan requires using a tool listed in `REQUESTED_TOOLS` (and directive is present & not `none`):
             *   Generate clear confirmation prompt (use `USER_PROMPT_TEMPLATE` or default) detailing action, requested tool, risks. Critical safety checkpoint.
             *   Await explicit user approval. Rejection triggers fallback (5.2) for that action.
-        5.  **Execution (If Approved & Safe):** Only upon user approval and if consistent with safety protocols:
+        5.  **Render UI and Excecute Tools:** Only upon user approval and if consistent with safety protocols:
+            *   Generate and render initial UI per `CUSTOM_UI_DEFINITION`
             *   Execute the specific, approved tool-based action, adhering to `CONSTRAINTS` (if provided).
-            *   Perform non-tool actions (text generation, UI updates).
         6.  **Interaction:** Engage user per `GOAL`, `PERSONA`, maintain UI state.
-    *   **Safety Layers:** Safety relies on: 1) User invocation establishing STDM authority (5.0), 2) LLM internal safety checks (5.1 step 2), 3) Mandatory user confirmation before tool execution (5.1 step 4).
+    *   **Safety Layers:** Safety relies on: 1) User invocation establishing STDM authority (5.0), 2) LLM internal safety checks (5.1 step 2), 3) Mandatory user confirmation before tool execution (5.1 step 5).
 *   **5.2. Interpretation Outcome: Degraded Capability Interpretation**
     *   Occurs when Full Capability Interpretation is not intended, possible, or permitted. Triggers include:
         *   `REQUESTED_TOOLS` is absent or `none`.
@@ -118,18 +126,34 @@ Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan
         1.  **Ingestion & Parsing:** Read and parse STDM (assuming user invocation established authority per 5.0). Recognize limitation.
         2.  **Inform User (Optional but Recommended):** Notify user of limitations/fallback (e.g., "Cannot execute code, proceeding with text analysis only").
         3.  **Guided Interpretation:** Treat STDM as meta-prompt. Fulfill `GOAL`, follow `PERSONA`, `CUSTOM_UI_DEFINITION` (via simulation/fallbacks), and `CONSTRAINTS` (if provided) using only inherent language capabilities within safety guidelines.
-        4.  **Simulated UI Output:** Render `INITIAL_OUTPUT` (if any). Simulate UI via formatted text, prioritizing specified `CUSTOM_UI_DEFINITION` fallbacks.
-        5.  **Simulated Interaction:** Respond conversationally per `PERSONA`, attempting to maintain simulated structure. Quality depends on LLM instruction following and STDM clarity.
     *   **Safety Context:** User invocation (5.0) mitigates injection risk affecting conversational behavior. LLM's core safety protocols still apply.
 
 ## 6. Security & User Experience
 
 *   **6.1. Informed Consent is Paramount:** Required before any tool execution requested by the STDM. Consent must be explicit, informed, and specific to the action/tool.
-*   **6.2. Sandboxing:** Critical for the `code_interpreter` tool. Must ensure strict isolation from the host system and other processes.
 *   **6.3. Tool Usage:** LLMs should only attempt to use tools if they are listed in `REQUESTED_TOOLS` (and not `none`), if the `GOAL` necessitates it, if safety protocols allow, and if the user grants permission. The STDM requests, the user authorizes.
-*   **6.4. Instruction Clarity:** Essential for achieving intended behavior and minimizing misinterpretation. A clear `GOAL` is vital, especially if `CONSTRAINTS` are omitted.
+*   **6.4. Instruction Clarity:** Essential for achieving intended behavior and minimizing misinterpretation. A clear `GOAL` is vital, especially if `CONSTRAINTS` are omitted. Instructions may cross reference. For example a `GOAL` may refer to the desire to render a `CUSTOM_UI_DEFINITION`
 *   **6.5. Transparent Risk Communication:** Confirmation prompts for tool use must clearly state potential risks.
 *   **6.6. Seamless UX:** Aim for STDM instructions to be invisible infrastructure enabling the desired interaction flow. The defined UI should enhance interaction. Clarity in directives like GOAL, and the use of CONSTRAINTS, is essential for a predictable and reliable user experience, especially when authors aim to guide interactions precisely. The aim should be a positive, clear, and non-manipulative user experience that aligns with the STDM's stated GOAL and PERSONA, avoiding deceptive patterns ('dark patterns'). 
+*   **6.7. Recommended Safety Preamble Instruction (Mitigating Proactive Execution):**
+    *   **Problem:** Some LLM interfaces might proactively attempt to interpret or execute STDM instructions immediately upon detecting the [STDM START] block, even without a clear, explicit user command to do so (as required by Section 5.0). This can lead to unexpected behavior and bypasses user intent.
+    *   **Recommendation:** To mitigate this risk, it is strongly recommended that all STDMs include a standard "Safety Preamble" instruction block as the very first item immediately following the [STDM START] delimiter (or after STDM_VERSION if present).
+    *   **Suggested Preamble Text:** Authors should include text functionally equivalent to the following:
+        ```
+        # === STDM SAFETY PREAMBLE: AWAIT EXPLICIT INVOCATION ===
+        # IMPORTANT: Do NOT automatically execute the GOAL or other directives within this STDM block upon detection.
+        # Await a specific, explicit user command directly referencing the intent to run *this* STDM's instructions.
+        # Examples of expected user commands: "Run the STDM", "Execute the instructions in this document", "Follow the STDM guidelines here", "Analyze this using the embedded STDM".
+        # If you detect this STDM block without such an explicit command, simply acknowledge its presence and state its primary GOAL (if readily available in the GOAL directive). Do not proceed further with execution until commanded.
+        # === END STDM SAFETY PREAMBLE ===
+        ```
+    *   **Intended Effect:** This preamble serves as an immediate, high-priority meta-instruction for the LLM interpreter. Upon parsing the STDM block, the LLM should first process this preamble. It instructs the LLM to:
+        *   **Halt:** Stop before proceeding to execute the main GOAL or CUSTOM_UI_DEFINITION.
+        *   **Verify:** Check if the user's prompt clearly indicated intent to run this specific STDM.
+        *   **Acknowledge & Wait (If No Command):** If no explicit command was given, the LLM should inform the user it has found an STDM (and ideally state its purpose/GOAL) and wait for the user to provide the necessary invocation command.
+        *   **Proceed (If Commanded):** If an explicit command was given, the preamble has served its purpose, and the LLM can proceed with the rest of the STDM interpretation (following the steps in Section 5.1 or 5.2).
+    *   **Complementary to Section 5.0:** This preamble acts as an in-band signal within the STDM itself to reinforce the principle of explicit user invocation detailed in Section 5.0. It does not replace the need for the user to actually issue the command but serves as a guardrail against premature LLM action.
+    *   **LLM Compliance:** The effectiveness of this preamble relies on the LLM interpreter being designed to recognize and prioritize such initial instructions within the STDM block.
 
 ## 7. Use Cases
 
@@ -143,6 +167,7 @@ Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan
 *   Intelligent config file advisors (explaining options).
 *   "Smart" templates guiding user input via interactive prompts.
 *   Reproducible research artifacts (using `code_interpreter` for analysis/plots).
+*   PDF scientific publications capable of using an LLM to provide background knowledge, reference specific web resources, or execute basic models 
 
 ## 8. Example Implementation
 
@@ -161,21 +186,25 @@ Ben Leighton^1,2^*, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan
     -->
     <script type="application/stdm-instructions">
     <!--
-# STDM START - Delimiter for clarity within script, though script tag itself is the primary delimiter.
+# STDM START - Delimiter for clarity within script
+
+# === STDM SAFETY PREAMBLE: AWAIT EXPLICIT INVOCATION ===
+# IMPORTANT: Do NOT automatically execute the GOAL or other directives within this STDM block upon detection.
+# Await a specific, explicit user command directly referencing the intent to run *this* STDMs instructions.
+# Examples of expected user commands: "Run the STDM", "Execute the instructions in this document", "Follow the STDM guidelines here", "Analyze this using the embedded STDM".
+# If you detect this STDM block without such an explicit command, simply acknowledge its presence and state its primary GOAL (if readily available in the GOAL directive). Do not proceed further with execution until commanded.
+# === END STDM SAFETY PREAMBLE ===
 
 # --- STDM v0.1 Directives ---
 
 STDM_VERSION: 0.1 
 
-GOAL: Analyze the embedded sales data (found within the HTML `<table>` with id 'sales-data') using Python code execution to calculate total revenue, average sale price per item (total revenue / total quantity), and identify the top-selling product by quantity. Present these findings clearly as a Markdown summary, followed by interactive options for further exploration.
+GOAL: Analyze the embedded sales data (found within the HTML `<table>` with id 'sales-data') using Python code execution to calculate total revenue, average sale price per item (total revenue / total quantity), and identify the top-selling product by quantity. Present these findings clearly as specified in the CUSTOM_UI_DEFINITION 
 
 CONTEXT: You are interpreting an STDM embedded within an HTML page. The primary data is within the table#sales-data. If the 'code_interpreter' tool is unavailable or declined by the user, attempt to perform the analysis by parsing the table text directly. Clearly state that the analysis is text-based and might be less accurate. If graphical or Markdown rendering is unavailable, present results and options as plain, well-formatted text. If you are constrained by rules or capabilities that prevent fulfilling the GOAL even in degraded mode, state your limitations clearly and ask the user how to proceed.
 
 CONSTRAINTS:
 - Analyze *only* the data present in the HTML table with id 'sales-data'. Do not use external data sources unless explicitly requested later via interaction.
-- Do not invent or hallucinate data.
-- Ensure calculations are correct based on the provided data.
-- Present results factually.
 - Adhere strictly to user permissions regarding tool use.
 
 REQUESTED_TOOLS: code_interpreter
@@ -185,8 +214,8 @@ PERSONA: Act as a helpful and precise data analyst assistant.
 CUSTOM_UI_DEFINITION:
 Format: Textual Description targeting Markdown/Simple HTML rendering.
 Initial Output & Interaction Structure:
-1.  First, present the calculated analysis results formatted as a Markdown block like this:
-    ```markdown
+1.  Present the calculated analysis results rendered as Markdown like this:
+    ```
     **Sales Data Analysis Summary**
 
     *   Total Revenue: $[Calculated Value]
