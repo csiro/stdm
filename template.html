@@ -114,50 +114,57 @@ document.addEventListener('DOMContentLoaded', () => {
 </head>
 <body>
 <div id="thinking-data-ribbon"
-     style="position:fixed;
-            top:10px;
-            right:10px;
-            z-index:999;
-            padding:8px 20px;
-            background:linear-gradient(135deg, 
+     style="position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            z-index: 999;
+            padding: 15px 0;
+            text-align: center;
+            background: linear-gradient(135deg, 
                        rgba(255,200,200,0.9), rgba(255,255,200,0.9), 
                        rgba(200,255,200,0.9), rgba(200,255,255,0.9), 
                        rgba(200,200,255,0.9), rgba(255,200,255,0.9));
-            color:#333;
-            font-family:Arial,sans-serif;
-            font-size:15px;
-            border-bottom-left-radius:8px;
-            box-shadow:0 0 8px rgba(0,0,0,0.2);
-            display:flex;
-            align-items:center;
-            transform:skewX(-15deg);
-            border:1px solid rgba(0,0,0,0.1);
-            border-left:1px solid rgba(255,255,255,0.8);
-            border-bottom:1px solid rgba(255,255,255,0.8);">
+            background-size: 200% 200%;
+            animation: shine 6s ease-in-out infinite;
+            color: #333;
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2), 0 0 30px rgba(255,255,255,0.4);
+            transform: rotate(45deg) translate(100px, -45px);
+            transform-origin: center;
+            border: 1px solid rgba(255,255,255,0.6);
+            border-left: 2px solid rgba(255,255,255,0.9);
+            border-bottom: 2px solid rgba(255,255,255,0.9);
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);">
   <a href=""
-     style="font-family:'Arial Black',Arial,sans-serif;
-            font-weight:bold;
-            font-size:16px;
-            background:linear-gradient(90deg, 
+     style="font-family: 'Arial Black', Arial, sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            background: linear-gradient(90deg, 
                        #ff0000, #ff9900, #ffff00, 
                        #00ff00, #00ffff, #0000ff, 
                        #9900ff, #ff0099, #ff0000);
-            background-size:100% 100%;
-            background-repeat:repeat-x;
-            -webkit-background-clip:text;
-            background-clip:text;
-            -webkit-text-fill-color:transparent;
-            text-decoration:none;
-            margin-right:8px;
-            transform:skewX(15deg);
-            text-shadow:0 0 1px rgba(0,0,0,0.3);">
+            background-size: 200% 100%;
+            animation: shine 3s linear infinite;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            text-shadow: 0 0 2px rgba(255,255,255,0.7);
+            letter-spacing: 0px;
+            display: inline-block;
+            padding: 0 3px;">
     I am Thinking Data
   </a>
-  <span style="cursor:pointer;
-               padding:0 5px;
-               font-size:16px;
-               font-weight:bold;
-               transform:skewX(15deg);"
+  <span style="cursor: pointer;
+               padding: 0 3px;
+               margin-left: 1px;
+               font-size: 14px;
+               font-weight: bold;
+               text-shadow: 0 0 2px #fff;
+               display: inline-block;
+               vertical-align: middle;"
         title="Close"
         onclick="document.getElementById('thinking-data-ribbon').style.display='none';">
     ×
@@ -208,13 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function downloadExample() {
         try {
-            // Find the H2/H3 for Section 8, then find the next pre > code element containing <!DOCTYPE html>
-            const sectionHeadings = Array.from(document.querySelectorAll('h2, h3'));
-            const section8Heading = sectionHeadings.find(h => /^\s*8\.\s*Example Implementation/.test(h.textContent));
+            // Find the H2/H3 for Section 9, then find the next pre > code element containing <!DOCTYPE html>
+            const section9Heading = document.querySelector('h2:nth-of-type(9), h3:nth-of-type(9)');
+            // Fallback for older docs that might have different heading structure
+            const allHeadings = document.querySelectorAll('h2, h3');
+            let section9HeadingFallback = null;
+            allHeadings.forEach(heading => {
+              if (heading.textContent.includes('Example Implementation')) section9HeadingFallback = heading;
+            });
+            const finalSection9Heading = section9Heading || section9HeadingFallback;
 
-            if (!section8Heading) throw new Error("Section 8 heading not found");
+            if (!finalSection9Heading) throw new Error("Section 9 heading not found");
 
-            let sibling = section8Heading.nextElementSibling;
+            let sibling = finalSection9Heading.nextElementSibling;
             let exampleCodeElement = null;
 
             while(sibling) {
@@ -234,14 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
                      }
                 }
                 // Stop searching if we hit the next major section heading
-                if (sibling.tagName === 'H2' && !/^\s*8\.\s*/.test(sibling.textContent)) {
+                if (sibling.tagName === 'H2' && !/^\s*9\.\s*/.test(sibling.textContent)) {
                     break;
                 }
                 sibling = sibling.nextElementSibling;
             }
 
             if (!exampleCodeElement) {
-                 throw new Error("Example HTML code block not found after Section 8 heading. Searched for <div class='codehilite'> or <pre> containing <!DOCTYPE html>.");
+                 throw new Error("Example HTML code block not found after Section 9 heading. Searched for <div class='codehilite'> or <pre> containing <!DOCTYPE html>.");
             }
 
             // Unescape HTML entities to get the original source code
