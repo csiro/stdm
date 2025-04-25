@@ -17,6 +17,7 @@ STDM embeds structured instructions within documents, images, or data files that
 - **Specification**: The complete [STDM v0.1 Specification](stdm_spec_v0.1.md) explains the format, structure, and recommended implementation patterns.
 - **Live Demo**: View the [rendered specification](index.html) which is itself an experimental STDM document.
 - **Examples**: Check the examples directory for implementation samples in various formats.
+  - **Floodplain Inundation Study**: [floodplain.html](examples/floodplain.html) - An interactive HTML poster of the open access paper "Floodplain inundation in the Murray–Darling Basin under current and future climate conditions." This example embeds the complete paper and provides STDM instructions that enable LLMs to navigate and analyze the content page by page.
 
 ## ⚠️ Note of Caution
 
