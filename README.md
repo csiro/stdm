@@ -12,6 +12,14 @@ STDM embeds structured instructions within documents, images, or data files that
 - Providing intelligent assistance tailored to specific data
 - Maintaining context and purpose across interactions
 
+## Visual Indicators
+
+**I am Thinking Data Ribbon**: STDM-enabled documents are visually marked with a colorful "I am Thinking Data" ribbon in the top-right corner. This ribbon:
+- Provides a clear visual indicator that the document contains STDM instructions
+- Helps users identify documents with embedded intelligence
+- Can be dismissed by clicking the "×" in the ribbon if desired
+- Is included in examples like the floodplain visualization
+
 ## Getting Started
 
 - **Specification**: The complete [STDM v0.1 Specification](stdm_spec_v0.1.md) explains the format, structure, and recommended implementation patterns.
