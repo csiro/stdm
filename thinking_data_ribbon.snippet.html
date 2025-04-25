@@ -1,3 +1,10 @@
+<style>
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+</style>
 <div id="thinking-data-ribbon"
      style="position: fixed;
             top: 0;
@@ -42,3 +49,16 @@
             padding: 0 3px;">
     I am Thinking Data
   </a>
+  <span style="cursor: pointer;
+               padding: 0 3px;
+               margin-left: 1px;
+               font-size: 14px;
+               font-weight: bold;
+               text-shadow: 0 0 2px #fff;
+               display: inline-block;
+               vertical-align: middle;"
+        title="Close"
+        onclick="document.getElementById('thinking-data-ribbon').style.display='none';">
+    ×
+  </span>
+</div>
