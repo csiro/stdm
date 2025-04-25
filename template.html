@@ -92,11 +92,17 @@ hr { border: 0; height: 1px; background: #dee2e6; margin: 40px 0; }
     h3 { font-size: 1.2em; }
     p { text-align: left; }
 }
+
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
     </style>
     <script>
 // Basic script to confirm JS is running.
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("STDM v1.6 Specification page loaded successfully.");
+    console.log("STDM v0.1 Specification page loaded successfully.");
 });
     </script>
     <!-- STDM START: This block contains the STDM instructions and metadata -->
@@ -107,6 +113,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </head>
 <body>
+<div id="thinking-data-ribbon"
+     style="position:fixed;
+            top:10px;
+            right:10px;
+            z-index:999;
+            padding:8px 20px;
+            background:linear-gradient(135deg, 
+                       rgba(255,200,200,0.9), rgba(255,255,200,0.9), 
+                       rgba(200,255,200,0.9), rgba(200,255,255,0.9), 
+                       rgba(200,200,255,0.9), rgba(255,200,255,0.9));
+            color:#333;
+            font-family:Arial,sans-serif;
+            font-size:15px;
+            border-bottom-left-radius:8px;
+            box-shadow:0 0 8px rgba(0,0,0,0.2);
+            display:flex;
+            align-items:center;
+            transform:skewX(-15deg);
+            border:1px solid rgba(0,0,0,0.1);
+            border-left:1px solid rgba(255,255,255,0.8);
+            border-bottom:1px solid rgba(255,255,255,0.8);">
+  <a href=""
+     style="font-family:'Arial Black',Arial,sans-serif;
+            font-weight:bold;
+            font-size:16px;
+            background:linear-gradient(90deg, 
+                       #ff0000, #ff9900, #ffff00, 
+                       #00ff00, #00ffff, #0000ff, 
+                       #9900ff, #ff0099, #ff0000);
+            background-size:100% 100%;
+            background-repeat:repeat-x;
+            -webkit-background-clip:text;
+            background-clip:text;
+            -webkit-text-fill-color:transparent;
+            text-decoration:none;
+            margin-right:8px;
+            transform:skewX(15deg);
+            text-shadow:0 0 1px rgba(0,0,0,0.3);">
+    I am Thinking Data
+  </a>
+  <span style="cursor:pointer;
+               padding:0 5px;
+               font-size:16px;
+               font-weight:bold;
+               transform:skewX(15deg);"
+        title="Close"
+        onclick="document.getElementById('thinking-data-ribbon').style.display='none';">
+    ×
+  </span>
+</div>
 
     <div class="container">
         <h1>Self Thinking Data Manifest Specification v0.1</h1>
@@ -120,14 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>To use: <em>Download</em> this file and drag it into an LLM with the prompt: <code>Follow the instructions in the document</code>.</span>
             </div>
             <div style="color: #b94a48; background: #fff3cd; border: 1px solid #f5c6cb; border-radius: 4px; padding: 0.5em; margin-top: 0.7em; font-size: 0.97em;">
-                <strong>Warning:</strong> This specification is in development. By design, the "Follow the instructions" prompt may ask an LLM to perform web searches, execute code, or access external information.
+                <strong>Warning:</strong> This specification is in development. Uploading this page to an LLM with "Follow the instructions" will result in the LLM performing behaviours encoded in the embedded instructions.  
             </div>
         </div>
     <!-- DATA START: Contains the primary data (the spec itself) in MARKDOWN format -->
         {{rendered_specification_html_content}}
     <!-- DATA END: Contains the primary data (the spec itself) in MARKDOWN format -->
         <hr>
-        <p class="footer-note">End of STDM v1.6 Specification Display</p>
+        <p class="footer-note">End of STDM v0.1 Specification Display</p>
 
     </div><!-- /container -->
 
@@ -166,13 +222,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (sibling.tagName === 'DIV' && sibling.classList.contains('codehilite')) {
                      const codeEl = sibling.querySelector('pre code');
                      // Check if it looks like the start of the HTML example
-                     if (codeEl && /^\s*<!DOCTYPE html>/.test(codeEl.innerHTML.trim())) {
+                     if (codeEl && /^\s*<!DOCTYPE html>/.test(codeEl.textContent.trim())) {
                           exampleCodeElement = codeEl;
                           break;
                      }
                 } else if (sibling.tagName === 'PRE') { // Fallback for non-highlighted code
                     const codeEl = sibling.querySelector('code');
-                    if (codeEl && /^\s*<!DOCTYPE html>/.test(codeEl.innerHTML.trim())) {
+                    if (codeEl && /^\s*<!DOCTYPE html>/.test(codeEl.textContent.trim())) {
                           exampleCodeElement = codeEl;
                           break;
                      }
