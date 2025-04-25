@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDB Floods: Past, Present & Future</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+/* Basic Styling */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #0077be; /* CSIRO Blue? */
+    color: white;
+    padding: 1.5rem 1rem;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 0.5rem;
+}
+
+main {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+section {
+    background-color: white;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+h2, h3 {
+    color: #005a8e; /* Darker blue */
+    margin-top: 0;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Map Section */
+#map-section h3 { margin-bottom: 0.5rem; } /* Reduce space before map */
+#map-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrap on small screens */
+    gap: 1rem;
+}
+#map {
+    height: 350px;
+    flex: 2; /* Takes more space */
+    min-width: 300px; /* Ensure map has min width */
+    border: 1px solid #ccc;
+}
+#map-info {
+    flex: 1;
+    min-width: 200px;
+    background-color: #e9f5ff;
+    padding: 1rem;
+    border-radius: 5px;
+}
+#info-content h4 { margin-top: 0; color: #0077be; }
+#info-content p { font-size: 0.9em; }
+
+/* Content Boxes & Icons */
+.content-box {
+    display: flex;
+    align-items: flex-start; /* Align icon top */
+    gap: 1rem;
+}
+.icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    margin-top: 5px; /* Align slightly */
+    opacity: 0.7;
+}
+.content-box p, .content-box ul {
+    margin: 0;
+}
+.content-box ul { padding-left: 20px; }
+
+
+/* Charts */
+.chart-container {
+    margin-top: 1rem;
+    position: relative; /* For potential tooltips */
+}
+.chart-caption {
+    font-size: 0.85em;
+    color: #555;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+.caveat {
+    font-size: 0.8em;
+    color: #777;
+    text-align: center;
+    margin-top: 0.2rem;
+    font-style: italic;
+}
+
+
+/* Regional Focus */
+#regional-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+#regional-buttons button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #0077be;
+    background-color: #e9f5ff;
+    color: #005a8e;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+#regional-buttons button:hover, #regional-buttons button.active {
+    background-color: #0077be;
+    color: white;
+}
+#regional-info {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    border-radius: 5px;
+    min-height: 80px; /* Prevent collapsing */
+}
+#regional-info h4 { margin: 0 0 0.5rem 0; }
+.change-value {
+    font-weight: bold;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+}
+.change-value[data-value^="+"] { color: #d9534f; background-color: #fdecea; } /* Red for increase */
+.change-value[data-value^="-"] { color: #0275d8; background-color: #e6f1fc; } /* Blue for decrease */
+.change-value:not([data-value^="-"]):not([data-value^="+"]) { color: #555; background-color: #eee; } /* Neutral */
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 1rem;
+    font-size: 0.8em;
+    color: #777;
+}
+
+/* Basic Responsive */
+@media (max-width: 650px) {
+    #map-container {
+        flex-direction: column;
+    }
+     #map-info {
+        flex-basis: auto; /* Reset flex basis */
+    }
+    .content-box {
+       flex-direction: column;
+       align-items: center;
+       text-align: center;
+    }
+     .icon { margin-bottom: 0.5rem; }
+     #regional-buttons { justify-content: center; }
+}
+
+</style>
+<body>
+    <header>
+        <h1>Floods in Hot Water?</h1>
+        <h2>Understanding Floodplain Changes in Australia's Murray-Darling Basin</h2>
+        <p>The Murray-Darling Basin is vital for Australia's environment and economy. How are floods changing with climate? This study uses satellite data and models to find out.</p>
+    </header>
+
+    <main>
+        <section id="map-section">
+            <h3>Explore the Basin</h3>
+            <div id="map-container">
+                <div id="map"></div>
+                <div id="map-info">
+                    <p>Click on the map regions (North/South) or key sites (markers) to see specific details.</p>
+                    <div id="info-content">
+                        <!-- JS will populate this -->
+                        <h4>Murray-Darling Basin</h4>
+                        <p>Australia's largest river system, facing complex water challenges.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="proxy-section">
+            <h3>How We Track Floods Over Time</h3>
+            <div class="content-box">
+                <span class="icon" style="font-size: 30px; text-align: center;">📏</span>
+                <p>Direct flood maps only go back 35 years. To look further back and into the future, we need a reliable clue, or <strong>proxy</strong>.</p>
+                <p><strong>Finding:</strong> The best clue is the <strong>Maximum 30-Day Runoff</strong> – the highest amount of water flowing off the land over a 30-day period each year. It strongly correlates with observed flood extent.</p>
+            </div>
+        </section>
+
+        <section id="history-section">
+            <h3>More Frequent Floods Recently (If Only Climate Mattered)</h3>
+             <p>Using our 'runoff proxy', how does the climate of the last 35 years compare to the last century?</p>
+            <div class="chart-container">
+                 <canvas id="historyChart"></canvas>
+                 <p class="chart-caption">Comparing flood likelihood: Recent climate conditions (<strong>Blue</strong>, 1988-2022) vs. Long-term history (<strong>Grey</strong>, 1900-2022). Higher lines mean more frequent floods for a given size. Especially noticeable in the South.</p>
+                 <p class="caveat">Note: This shows potential based on climate alone. Actual floods are also affected by dams and water use.</p>
+            </div>
+        </section>
+
+        <section id="future-section">
+            <h3>The Future Flood Puzzle</h3>
+            <p>Climate change projects less overall water, but more intense downpours. What does this mean for floods?</p>
+             <div class="chart-container">
+                <canvas id="futureChart"></canvas>
+                <p class="chart-caption">Projected Flood Likelihood (<strong>Red</strong>, 2046-2075) vs. History (<strong>Grey</strong>, 1900-2022). The shaded red area shows the range of climate model projections.</p>
+                 <p><strong>Key Insight:</strong> Floods seem less affected than overall water decline! Rarer, bigger floods might stay similar or even increase (especially North), while smaller floods might decrease (especially South).</p>
+            </div>
+        </section>
+
+        <section id="regional-focus">
+             <h3>Zooming In: North vs. South & Key Sites</h3>
+             <p>Changes aren't uniform. Click buttons below (or map areas) to see regional differences for a typical '1-in-20-year' flood event.</p>
+             <div id="regional-buttons">
+                 <button data-region="mdb">MDB Overall</button>
+                 <button data-region="north">North MDB</button>
+                 <button data-region="south">South MDB</button>
+                 <button data-region="barmah">Barmah Forest (South)</button>
+                 <button data-region="macquarie">Macquarie Marshes (North)</button>
+             </div>
+             <div id="regional-info" class="content-box">
+                <!-- JS updates this -->
+                <h4>MDB Overall</h4>
+                <p>Projected change in 1-in-20-year flood size: <span class="change-value" data-value="5">~+5%</span> (Median projection, but wide uncertainty)</p>
+                <p>Varied picture across the basin.</p>
+             </div>
+        </section>
+
+        <section id="takeaway-section">
+            <h3>What Does This Mean?</h3>
+            <div class="content-box">
+                <span class="icon" style="font-size: 30px; text-align: center;">💡</span>
+                <ul>
+                    <li><strong>Complexity:</strong> Climate change isn't simple – less total water doesn't always mean fewer big floods. Intense rain matters.</li>
+                    <li><strong>Regional Differences:</strong> Solutions need to be local. North MDB faces different future flood risks than the South.</li>
+                    <li><strong>Adaptation is Key:</strong> Water managers need this info to plan environmental flows and manage flood risks effectively.</li>
+                    <li><strong>Proxy Power:</strong> The '30-day runoff' proxy helps bridge data gaps to understand long-term flood trends.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Based on Teng et al. (2025), Floodplain inundation in the Murray-Darling Basin under current and future climate conditions, Scientific Reports. Interactive poster concept.</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Map Initialization (Leaflet) ---
+    const map = L.map('map').setView([-31.5, 146], 5); // Center on MDB
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // --- Map Data & Interactivity ---
+    const mapInfoContent = document.getElementById('info-content');
+    const basinBounds = { // Approximate N/S split (e.g., around Darling River bend)
+        north: [[-24, 138], [-32, 153]],
+        south: [[-32, 138], [-38, 151]]
+    };
+    const keySites = [
+        { name: "Macquarie Marshes", lat: -30.7, lon: 147.5, type: "eco", region: 'north', change: '+15%' }, // Example projected change
+        { name: "Lower Balonne", lat: -28.8, lon: 148.2, type: "irr", region: 'north', change: '+8%' },
+        { name: "Menindee Lakes", lat: -32.3, lon: 142.3, type: "irr", region: 'north', change: '+5%' },
+        { name: "Barmah Forest", lat: -36.0, lon: 144.9, type: "eco", region: 'south', change: '-5%' },
+        { name: "Chowilla Floodplain", lat: -33.9, lon: 140.8, type: "eco", region: 'south', change: '+2%' },
+        { name: "Coleambally (CIA)", lat: -34.8, lon: 145.9, type: "irr", region: 'south', change: '-3%' }
+    ];
+
+    // Add polygons for North/South (simplified)
+    const northPoly = L.rectangle(basinBounds.north, { color: "#ff7800", weight: 1, fillOpacity: 0.1 }).addTo(map);
+    const southPoly = L.rectangle(basinBounds.south, { color: "#0077be", weight: 1, fillOpacity: 0.1 }).addTo(map);
+
+    // Add markers for sites
+    keySites.forEach(site => {
+        const iconColor = site.type === 'eco' ? 'green' : 'blue';
+        // Basic marker, could use custom icons
+        L.marker([site.lat, site.lon])
+            .addTo(map)
+            .bindTooltip(site.name)
+            .on('click', () => updateInfoPanel(site.name, `Type: ${site.type === 'eco' ? 'Ecological' : 'Irrigation'}. Region: ${site.region}. Projected 1-in-20yr flood change: ${site.change || 'N/A'}.`));
+    });
+
+    // Polygon clicks
+    northPoly.on('click', () => updateInfoPanel('Northern MDB', 'Experiences more erratic rainfall. Projected increase in rarer floods due to intense rainfall potentially offsetting overall drying.'));
+    southPoly.on('click', () => updateInfoPanel('Southern MDB', 'More regulated rivers, cooler climate. Projected decrease in frequent floods, rarer floods may stay similar. Overall runoff decline expected.'));
+
+    function updateInfoPanel(title, text) {
+        mapInfoContent.innerHTML = `<h4>${title}</h4><p>${text}</p>`;
+    }
+
+    // --- Chart Data & Initialization (Chart.js) ---
+    const aepLabels = ['50yr', '20yr', '10yr', '5yr', '2yr', '1yr']; // Simplified ARIs as labels
+    const aepValues = [0.02, 0.05, 0.1, 0.2, 0.5, 1.0]; // Actual AEPs for internal use if needed
+
+    // Example data (relative magnitude - higher means more runoff/flood)
+    const historyData = {
+        recent35: [110, 100, 90, 75, 50, 30], // Slightly higher potential freq
+        longterm123: [100, 90, 80, 65, 45, 25]
+    };
+    const futureData = {
+        median: [105, 95, 85, 70, 40, 20], // Similar high, lower low
+        low: [90, 80, 70, 55, 30, 15],    // 10th percentile
+        high: [120, 110, 100, 85, 50, 25]  // 90th percentile
+    };
+
+    // History Chart
+    const ctxHistory = document.getElementById('historyChart').getContext('2d');
+    new Chart(ctxHistory, {
+        type: 'line',
+        data: {
+            labels: aepLabels,
+            datasets: [
+                {
+                    label: 'Recent Climate (35yr)',
+                    data: historyData.recent35,
+                    borderColor: 'rgb(75, 192, 192)', // Blueish
+                    tension: 0.1,
+                    pointRadius: 0,
+                },
+                 {
+                    label: 'Long History (123yr)',
+                    data: historyData.longterm123,
+                    borderColor: 'rgb(180, 180, 180)', // Grey
+                    tension: 0.1,
+                    pointRadius: 0,
+                }
+            ]
+        },
+        options: {
+            scales: { y: { title: { display: true, text: 'Relative Flood Size (Proxy)' } },
+                      x: { title: { display: true, text: 'Flood Rarity (Average Return Interval)'}}} ,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    // Future Chart
+    const ctxFuture = document.getElementById('futureChart').getContext('2d');
+    new Chart(ctxFuture, {
+        type: 'line',
+        data: {
+            labels: aepLabels,
+            datasets: [
+                 {
+                    label: 'Long History (123yr)',
+                    data: historyData.longterm123,
+                    borderColor: 'rgb(180, 180, 180)', // Grey
+                    tension: 0.1,
+                    pointRadius: 0,
+                    order: 3 // Draw last
+                },
+                {
+                    label: 'Future Projection (Median)',
+                    data: futureData.median,
+                    borderColor: 'rgb(255, 99, 132)', // Red
+                    tension: 0.1,
+                    pointRadius: 0,
+                    order: 2
+                },
+                {
+                    label: 'Future Range (10th-90th percentile)',
+                    data: futureData.high, // Use high for upper bound
+                    borderColor: 'rgba(255, 99, 132, 0.2)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)', // Fill color
+                    tension: 0.1,
+                    pointRadius: 0,
+                    fill: '+1', // Fill to the dataset below (needs the 'low' dataset)
+                    order: 0
+                },
+                 {
+                    label: 'Future Low', // Invisible dataset for fill base
+                    data: futureData.low,
+                    borderColor: 'transparent',
+                    pointRadius: 0,
+                    fill: false,
+                    order: 1
+                }
+            ]
+        },
+         options: {
+            scales: { y: { title: { display: true, text: 'Relative Flood Size (Proxy)' } },
+                      x: { title: { display: true, text: 'Flood Rarity (Average Return Interval)'}}},
+            plugins: {
+                legend: { position: 'bottom', labels: { filter: item => item.text !== 'Future Low' }}, // Hide the dummy dataset label
+                tooltip: { mode: 'index', intersect: false }
+            }
+        }
+    });
+
+
+    // --- Regional Focus Interactivity ---
+    const regionalButtons = document.querySelectorAll('#regional-buttons button');
+    const regionalInfo = document.getElementById('regional-info');
+    const regionalData = { // Example data for 1-in-20 year event change
+        mdb: { title: 'MDB Overall', change: '+5%', text: 'Varied picture across the basin, slight median increase projected.' },
+        north: { title: 'North MDB', change: '+10%', text: 'Higher chance of increased flood size due to intense rainfall focus.' },
+        south: { title: 'South MDB', change: '-2%', text: 'Slight decrease projected, less rainfall and more regulation influence.' },
+        barmah: { title: 'Barmah Forest (South)', change: '-5%', text: 'Located south, projected decrease mirrors regional trend.' },
+        macquarie: { title: 'Macquarie Marshes (North)', change: '+15%', text: 'Strong projected increase, sensitive to northern rainfall changes.' }
+    };
+
+    regionalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Update active button style
+            regionalButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Update info panel
+            const region = button.dataset.region;
+            const data = regionalData[region];
+            const changeVal = data.change || 'N/A';
+            // Determine sign for styling
+            let sign = '';
+             if (changeVal.startsWith('+')) sign = '+';
+             else if (changeVal.startsWith('-')) sign = '-';
+
+            regionalInfo.innerHTML = `
+                <h4>${data.title}</h4>
+                <p>Projected change in 1-in-20-year flood size: <span class="change-value" data-value="${sign}">${changeVal}</span></p>
+                <p>${data.text}</p>
+            `;
+        });
+    });
+     // Set initial state for regional buttons
+     document.querySelector('#regional-buttons button[data-region="mdb"]').classList.add('active');
+
+
+}); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
