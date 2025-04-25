@@ -18,7 +18,7 @@ STDM embeds structured instructions within documents, images, or data files that
 - **Live Demo**: View the [rendered specification](index.html) which is itself an experimental STDM document.
 - **Examples**: Check the examples directory for implementation samples in various formats.
 
-## ⚠️ Important Note of Caution
+## ⚠️ Note of Caution
 
 STDM is an experimental framework still in early development. While it aims to enhance data utility and preserve author intent, it involves directing LLM behavior which carries inherent risks, including causing unexpected behaviour. The specification incorporates mitigation strategies, but users should approach implementation with appropriate caution and security considerations.
 
