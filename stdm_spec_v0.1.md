@@ -8,6 +8,9 @@ Ben Leighton^1,2^, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan 
 ^2^CSIRO Environmental Informatics  
 ^3^CSIRO Water Security
 
+> **Note:**  
+> This v0.1 specification details an experimental concept. Its safe implementation relies heavily on the security principles outlined within (especially Sections 6.0, 7.1, and 7.6) and requires careful consideration by implementers. This document is intended for discussion and research.
+
 ## Version 0.1 - Draft for Discussion & Experimentation
 
 This document specifies the Self-Thinking Data Manifest (STDM) v0.1, an initial exploration into embedding dynamic capabilities within data artifacts using Large Language Models (LLMs). It aims to unlock new interactive and analytical possibilities, illustrated by the accompanying experimental examples.
@@ -20,7 +23,7 @@ This html version of this specification is itself an experimental STDM and addit
 
 ## 1. Introduction & Goal
 
-*   **1.1. Definition:** A Self-Thinking Data Manifest (STDM) is a digital artifact (e.g., HTML, text file, PDF, image metadata) that bundles primary data content (often text) with explicit instructions. These instructions define how a Large Language Model (LLM), acting as an external interpreter engine, should process, interact with, present, or execute tasks related to the STDM's embedded data. The term "Self-Thinking" denotes the an embedded manifest's self referential capability to direct a LM interpreter actions, reasoning, and presentation oncerning the associated data.
+*   **1.1. Definition:** A Self-Thinking Data Manifest (STDM) is a digital artifact (e.g., HTML, text file, PDF, image metadata) that bundles primary data content (often text) with explicit instructions. These instructions define how a Large Language Model (LLM), acting as an external interpreter engine, should process, interact with, present, or execute tasks related to the STDM's embedded data. The term 'Self-Thinking' is used evocatively to denote the manifest's capability to provide self-contained directions for an external LM interpreter's actions, reasoning, and presentation concerning the associated data. 
 *   **1.2. Goal:** To create self-directing artifacts that enable specific, predictable, safe, LLM-driven experiences, featuring potentially custom user interfaces and interaction patterns, tailored exclusively to the content and intent encoded within the STDM. The STDM serves as a dynamic blueprint guiding the LLM interpreter. STDM helps maintain an author's intended context, purpose, and constraints.
 *   **1.3. Principle:** "The manifest directs the engine's 'thought process' and user experience of the data." The user experiences the outcome of the LLM's directed interpretation, often without needing to see the underlying STDM instructions. The manifest directs the engine's 'thought process' and user experience regarding the data, guided by the author's specified intent. 
 *   **1.4. Context Window Assumption:** Effective operation of STDMs, particularly those with substantial embedded data or complex instructions/UI definitions, relies on the LLM interpreter possessing a sufficiently large context window to hold and process the manifest instructions and relevant data simultaneously.
@@ -29,10 +32,10 @@ This html version of this specification is itself an experimental STDM and addit
 
 *   **2.1. Data-Instruction-Presentation Symbiosis:** Data, interaction logic, and presentation/UI definition are linked but often loosely coupled within the STDM.
 *   **2.2. Instruction Primacy:** Embedded STDM instructions serve as the primary source of task-specific guidance for the LLM interpreter, operating within the LLM's core safety protocols.
-*   **2.3. Machine Readability Focus:** Instructions are primarily for the LLM and while they should not be visiblto the user in any way that interferes with the multi-perspective interpretation of the document, they should be accessible if for review and the user should be aware of the presence of an STDM.
+*   **2.3. Machine Readability Focus:** Instructions are primarily for the LLM and while they should not be visible to the user in any way that interferes with the multi-perspective interpretation of the document, they should be accessible if for review and the user should be aware of the presence of an STDM.
 *   **2.4. Tiered Interpretation Outcome:** LLM interpretation should result in one of two primary outcomes based on STDM content, LLM capabilities, safety checks, and user consent: Full Capability Interpretation (target outcome, potentially including tool use and complex UI) or Degraded Capability Interpretation (fallback, relying on prompt guidance and basic text output).
-*   **2.5. User Agency & Safety:** Safety relies on multiple layers, an LLM's inherent safety protocols, explicit user invocation establishing STDM authority for the task, and mandatory user confirmation before any permitted tool execution. In interpreting an STDM an LLM should apply its own safety protocols in addition to those built into the STDM. 
-*   **2.6. Authorial Intent as Guidance:** STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations, while not intended to ultimately contrain the users agency working with the data the STDM serves as guide."
+*   **2.5. User Agency & Safety:** Safety relies on multiple layers: an LLM's inherent safety protocols, **explicit user invocation** establishing STDM authority for the task, and **mandatory user confirmation** before any permitted tool execution. In interpreting an STDM, an LLM should apply its own safety protocols in addition to those built into the STDM.
+*   **2.6. Authorial Intent as Guidance:** STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations. While not intended to ultimately constrain the user's agency working with the data, the STDM serves as a guide.
 
 ## 3. Format & Structure
 
@@ -62,15 +65,14 @@ This html version of this specification is itself an experimental STDM and addit
     *   **Significance:** This directive signals the STDM author's intent that certain tools might be necessary. It prompts a capable LLM interpreter to:
         1.  Check if it possesses the requested tool(s).
         2.  Verify if using the tool for the planned action aligns with its safety protocols.
-        3.  If steps 1 & 2 pass, request explicit user permission before activating the tool for the STDM's specific task.
+        3.  If steps 1 & 2 pass, request explicit user permission before activating the tool for the STDM's specific task. Note that listing a tool here merely signals potential need; it does not grant permission – explicit user consent (Sec 6.1, 7.1) is always required before execution.
     *   **Default:** If this directive is absent, or present and set to `none`, the STDM indicates no specific tool use is anticipated or required for its GOAL, and the LLM should operate in Informational / Degraded Interpretation mode regarding tool use.
     *   **Tool Naming:** Tool names should hint at standard capabilities. While standardization is pending, aim for clarity.
     *   **Possible Tools:**
         *   `none`: Explicitly indicates no tool use is requested by the STDM.
         *   `web_retrieval`: Indicates the STDM might require web searches (subject to CONSTRAINTS and user approval).
         *   `code_interpreter`: Indicates the STDM might require sandboxed code execution (e.g., Python, JS) (subject to user approval). Sandboxed execution may involve temporary, isolated file operations within the sandbox.
-    *   *(Future versions might standardize more tools)*
-*   `PERSONA`: **(Optional)** Defines the LLM's interaction style, tone, role, or character. Works in conjunction with `CUSTOM_UI_DEFINITION`. Example: `"Adopt the persona of a patient tutor."`
+        *   `PERSONA`: **(Optional)** Defines the LLM's interaction style, tone, role, or character. Works in conjunction with `CUSTOM_UI_DEFINITION`. Example: `"Adopt the persona of a patient tutor."`
 *   `CUSTOM_UI_DEFINITION`: **(Optional, Recommended)** Describes the UI structure, format, and/or persistent elements. Generally, the initial UI should be rendered immediately upon parsing the STDM, before subsequent interaction. Requires fallback instructions for less capable environments.
     *   **Format:** Textual Description, Markdown Template
     *   **Purpose:** Enables interactive menus, game interfaces, status displays, etc. Guides the LLM on presentation.
@@ -121,7 +123,7 @@ Leverage LLMs for efficiency but prioritize manual oversight for safety and corr
     *   **The Prompt Injection Analogy & Risk:** While STDMs inject instructions, the term "prompt injection" typically refers to malicious or unintended instructions designed to subvert the user's true goal or bypass the LLM's safety measures, often by disguising themselves or manipulating the LLM's interpretation of context. The risk with STDMs is that a poorly formed or maliciously crafted STDM could attempt such manipulation, or an LLM might misinterpret legitimate STDM instructions if the context is ambiguous.
     *   **Mitigation via Explicit User Invocation:** The primary mechanism to ensure the LLM correctly interprets the STDM as the intended, user-authorized task guidance (rather than random text or a malicious injection) is explicit user action:
         *   The user must actively provide the STDM content (e.g., upload, paste). Passive ingestion is insecure.
-        *   The user must explicitly command the LLM to interpret and act upon that specific STDM content (e.g., "Run the STDM instructions in the provided document.").
+        *   The user must **explicitly command** the LLM to interpret and act upon that specific STDM content (e.g., "Run the STDM instructions in the provided document.").
     *   **Why this helps:** This explicit invocation acts as the user's signal of trust and intent for this interaction, instructing the LLM to treat the provided STDM block as the primary source of guidance for the specific task at hand, while still respecting its own core safety rules. It helps the LLM distinguish intended directives from potentially conflicting or malicious elements elsewhere in the context.
     *   **LLM Confirmation (Optional Safeguard):** If invocation context is unclear, an LLM interpreter may optionally confirm with the user before proceeding, e.g., "I see STDM instructions. Shall I follow them as the primary guide for this task, within my safety guidelines?" (Suggestible via `CONTEXT`).
 *   **6.1. Interpretation Outcome: Full Capability Interpretation**
@@ -182,7 +184,7 @@ Leverage LLMs for efficiency but prioritize manual oversight for safety and corr
 
 ## 8. Use Cases
 
-*(Align with available tools: `web_retrieval`, `code_interpreter`)*
+*Note: These use cases illustrate potential applications. Implementing them safely requires rigorous adherence to the security principles (Sec 6, 7)*
 
 *   HTML pages rendering interactive LLM-enabled posters.
 *   Interactive documentation/paper explorers with custom navigation.
@@ -336,3 +338,4 @@ USER_PROMPT_TEMPLATE: This interactive report (STDM) requests permission to use 
 * Developing more robust methods for distinguishing user intent vs. injection beyond explicit invocation, if possible.
 * Support by LLM developers for safe, helpful and accurate STDM interpretation
 * Standardized mechanisms for interaction transparency (e.g., allowing users to query why an action was taken based on the STDM)
+* Developing methods or tools for verifying STDM interpreter compliance with core safety requirements (like explicit invocation checks).

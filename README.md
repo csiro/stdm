@@ -2,6 +2,8 @@
 
 STDM enables data artifacts, including documents, to guide their own interpretation by Large Language Models (LLMs), creating interactive, self-directing experiences that preserve author intent while unlocking new analytical capabilities.
 
+# Note: The v0.1 specification details an experimental concept. Its safe implementation relies heavily on the security principles outlined within it (esp. Sec 6.0, 7.1, 7.6) and requires careful consideration by implementers. This repository is intended for discussion and research. 
+
 ## What is STDM?
 
 STDM embeds structured instructions within documents, images, or data files that direct how LLMs should process, analyze, and present the data. This creates "smart artifacts" capable of:
