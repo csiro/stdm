@@ -224,6 +224,10 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <p><sup>1</sup>Corresponding Author: Ben.Leighton@csiro.au<br>
 <sup>2</sup>CSIRO Environmental Informatics<br>
 <sup>3</sup>CSIRO Water Security</p>
+<blockquote>
+<p><strong>Note:</strong><br>
+This v0.1 specification details an experimental concept. Its safe implementation relies heavily on the security principles outlined within (especially Sections 6.0, 7.1, and 7.6) and requires careful consideration by implementers. This document is intended for discussion and research.</p>
+</blockquote>
 <h2>Version 0.1 - Draft for Discussion &amp; Experimentation</h2>
 <p>This document specifies the Self-Thinking Data Manifest (STDM) v0.1, an initial exploration into embedding dynamic capabilities within data artifacts using Large Language Models (LLMs). It aims to unlock new interactive and analytical possibilities, illustrated by the accompanying experimental examples.</p>
 <p>Guiding LLMs reliably presents challenges, including known security risks like prompt injection. STDM addresses this not by ignoring risks, but by proposing a defined structure (explicit directives, goals, constraints) to move beyond ad-hoc prompting towards more transparent, author-guided, and potentially programmable LLM interactions. The goal is to enhance data utility, preserve authorial intent, and increase predictability.</p>
@@ -231,7 +235,7 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <p>This html version of this specification is itself an experimental STDM and additional examples are provided both in the specification and the accompanying repository</p>
 <h2>1. Introduction &amp; Goal</h2>
 <ul>
-<li><strong>1.1. Definition:</strong> A Self-Thinking Data Manifest (STDM) is a digital artifact (e.g., HTML, text file, PDF, image metadata) that bundles primary data content (often text) with explicit instructions. These instructions define how a Large Language Model (LLM), acting as an external interpreter engine, should process, interact with, present, or execute tasks related to the STDM's embedded data. The term "Self-Thinking" denotes the an embedded manifest's self referential capability to direct a LM interpreter actions, reasoning, and presentation oncerning the associated data.</li>
+<li><strong>1.1. Definition:</strong> A Self-Thinking Data Manifest (STDM) is a digital artifact (e.g., HTML, text file, PDF, image metadata) that bundles primary data content (often text) with explicit instructions. These instructions define how a Large Language Model (LLM), acting as an external interpreter engine, should process, interact with, present, or execute tasks related to the STDM's embedded data. The term 'Self-Thinking' is used evocatively to denote the manifest's capability to provide self-contained directions for an external LM interpreter's actions, reasoning, and presentation concerning the associated data. </li>
 <li><strong>1.2. Goal:</strong> To create self-directing artifacts that enable specific, predictable, safe, LLM-driven experiences, featuring potentially custom user interfaces and interaction patterns, tailored exclusively to the content and intent encoded within the STDM. The STDM serves as a dynamic blueprint guiding the LLM interpreter. STDM helps maintain an author's intended context, purpose, and constraints.</li>
 <li><strong>1.3. Principle:</strong> "The manifest directs the engine's 'thought process' and user experience of the data." The user experiences the outcome of the LLM's directed interpretation, often without needing to see the underlying STDM instructions. The manifest directs the engine's 'thought process' and user experience regarding the data, guided by the author's specified intent. </li>
 <li><strong>1.4. Context Window Assumption:</strong> Effective operation of STDMs, particularly those with substantial embedded data or complex instructions/UI definitions, relies on the LLM interpreter possessing a sufficiently large context window to hold and process the manifest instructions and relevant data simultaneously.</li>
@@ -240,10 +244,10 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <ul>
 <li><strong>2.1. Data-Instruction-Presentation Symbiosis:</strong> Data, interaction logic, and presentation/UI definition are linked but often loosely coupled within the STDM.</li>
 <li><strong>2.2. Instruction Primacy:</strong> Embedded STDM instructions serve as the primary source of task-specific guidance for the LLM interpreter, operating within the LLM's core safety protocols.</li>
-<li><strong>2.3. Machine Readability Focus:</strong> Instructions are primarily for the LLM and while they should not be visiblto the user in any way that interferes with the multi-perspective interpretation of the document, they should be accessible if for review and the user should be aware of the presence of an STDM.</li>
+<li><strong>2.3. Machine Readability Focus:</strong> Instructions are primarily for the LLM and while they should not be visible to the user in any way that interferes with the multi-perspective interpretation of the document, they should be accessible if for review and the user should be aware of the presence of an STDM.</li>
 <li><strong>2.4. Tiered Interpretation Outcome:</strong> LLM interpretation should result in one of two primary outcomes based on STDM content, LLM capabilities, safety checks, and user consent: Full Capability Interpretation (target outcome, potentially including tool use and complex UI) or Degraded Capability Interpretation (fallback, relying on prompt guidance and basic text output).</li>
-<li><strong>2.5. User Agency &amp; Safety:</strong> Safety relies on multiple layers, an LLM's inherent safety protocols, explicit user invocation establishing STDM authority for the task, and mandatory user confirmation before any permitted tool execution. In interpreting an STDM an LLM should apply its own safety protocols in addition to those built into the STDM. </li>
-<li><strong>2.6. Authorial Intent as Guidance:</strong> STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations, while not intended to ultimately contrain the users agency working with the data the STDM serves as guide."</li>
+<li><strong>2.5. User Agency &amp; Safety:</strong> Safety relies on multiple layers: an LLM's inherent safety protocols, <strong>explicit user invocation</strong> establishing STDM authority for the task, and <strong>mandatory user confirmation</strong> before any permitted tool execution. In interpreting an STDM, an LLM should apply its own safety protocols in addition to those built into the STDM.</li>
+<li><strong>2.6. Authorial Intent as Guidance:</strong> STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations. While not intended to ultimately constrain the user's agency working with the data, the STDM serves as a guide.</li>
 </ul>
 <h2>3. Format &amp; Structure</h2>
 <ul>
@@ -281,7 +285,7 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <li><strong>Significance:</strong> This directive signals the STDM author's intent that certain tools might be necessary. It prompts a capable LLM interpreter to:<ol>
 <li>Check if it possesses the requested tool(s).</li>
 <li>Verify if using the tool for the planned action aligns with its safety protocols.</li>
-<li>If steps 1 &amp; 2 pass, request explicit user permission before activating the tool for the STDM's specific task.</li>
+<li>If steps 1 &amp; 2 pass, request explicit user permission before activating the tool for the STDM's specific task. Note that listing a tool here merely signals potential need; it does not grant permission – explicit user consent (Sec 6.1, 7.1) is always required before execution.</li>
 </ol>
 </li>
 <li><strong>Default:</strong> If this directive is absent, or present and set to <code>none</code>, the STDM indicates no specific tool use is anticipated or required for its GOAL, and the LLM should operate in Informational / Degraded Interpretation mode regarding tool use.</li>
@@ -290,12 +294,11 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <li><code>none</code>: Explicitly indicates no tool use is requested by the STDM.</li>
 <li><code>web_retrieval</code>: Indicates the STDM might require web searches (subject to CONSTRAINTS and user approval).</li>
 <li><code>code_interpreter</code>: Indicates the STDM might require sandboxed code execution (e.g., Python, JS) (subject to user approval). Sandboxed execution may involve temporary, isolated file operations within the sandbox.</li>
-</ul>
-</li>
-<li><em>(Future versions might standardize more tools)</em></li>
-</ul>
-</li>
 <li><code>PERSONA</code>: <strong>(Optional)</strong> Defines the LLM's interaction style, tone, role, or character. Works in conjunction with <code>CUSTOM_UI_DEFINITION</code>. Example: <code>"Adopt the persona of a patient tutor."</code></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><code>CUSTOM_UI_DEFINITION</code>: <strong>(Optional, Recommended)</strong> Describes the UI structure, format, and/or persistent elements. Generally, the initial UI should be rendered immediately upon parsing the STDM, before subsequent interaction. Requires fallback instructions for less capable environments.<ul>
 <li><strong>Format:</strong> Textual Description, Markdown Template</li>
 <li><strong>Purpose:</strong> Enables interactive menus, game interfaces, status displays, etc. Guides the LLM on presentation.</li>
@@ -357,7 +360,7 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <li><strong>The Prompt Injection Analogy &amp; Risk:</strong> While STDMs inject instructions, the term "prompt injection" typically refers to malicious or unintended instructions designed to subvert the user's true goal or bypass the LLM's safety measures, often by disguising themselves or manipulating the LLM's interpretation of context. The risk with STDMs is that a poorly formed or maliciously crafted STDM could attempt such manipulation, or an LLM might misinterpret legitimate STDM instructions if the context is ambiguous.</li>
 <li><strong>Mitigation via Explicit User Invocation:</strong> The primary mechanism to ensure the LLM correctly interprets the STDM as the intended, user-authorized task guidance (rather than random text or a malicious injection) is explicit user action:<ul>
 <li>The user must actively provide the STDM content (e.g., upload, paste). Passive ingestion is insecure.</li>
-<li>The user must explicitly command the LLM to interpret and act upon that specific STDM content (e.g., "Run the STDM instructions in the provided document.").</li>
+<li>The user must <strong>explicitly command</strong> the LLM to interpret and act upon that specific STDM content (e.g., "Run the STDM instructions in the provided document.").</li>
 </ul>
 </li>
 <li><strong>Why this helps:</strong> This explicit invocation acts as the user's signal of trust and intent for this interaction, instructing the LLM to treat the provided STDM block as the primary source of guidance for the specific task at hand, while still respecting its own core safety rules. It helps the LLM distinguish intended directives from potentially conflicting or malicious elements elsewhere in the context.</li>
@@ -439,7 +442,7 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 </li>
 </ul>
 <h2>8. Use Cases</h2>
-<p><em>(Align with available tools: <code>web_retrieval</code>, <code>code_interpreter</code>)</em></p>
+<p><em>Note: These use cases illustrate potential applications. Implementing them safely requires rigorous adherence to the security principles (Sec 6, 7)</em></p>
 <ul>
 <li>HTML pages rendering interactive LLM-enabled posters.</li>
 <li>Interactive documentation/paper explorers with custom navigation.</li>
@@ -593,6 +596,7 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <li>Developing more robust methods for distinguishing user intent vs. injection beyond explicit invocation, if possible.</li>
 <li>Support by LLM developers for safe, helpful and accurate STDM interpretation</li>
 <li>Standardized mechanisms for interaction transparency (e.g., allowing users to query why an action was taken based on the STDM)</li>
+<li>Developing methods or tools for verifying STDM interpreter compliance with core safety requirements (like explicit invocation checks).</li>
 </ul>
     <!-- DATA END: Contains the primary data (the spec itself) in MARKDOWN format -->
         <hr>
