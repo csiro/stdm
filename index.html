@@ -144,6 +144,38 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 
 </head>
 <body>
+<style>
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 350px;
+  background-color: rgba(30, 30, 30, 0.9);
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px;
+  position: fixed;
+  z-index: 1000;
+  bottom: 30px;
+  left: 30px;
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+#thinking-data-ribbon:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+</style>
 <div id="thinking-data-ribbon"
      style="position: fixed;
             top: 0;
@@ -186,7 +218,7 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
             letter-spacing: 0px;
             display: inline-block;
             padding: 0 3px;">
-    I am Thinking Data
+    This is Thinking Data
   </a>
   <span style="cursor: pointer;
                padding: 0 3px;
@@ -200,8 +232,10 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
         onclick="document.getElementById('thinking-data-ribbon').style.display='none';">
     ×
   </span>
+  <div class="tooltip">
+    If you drag this into an LLM, there are embedded instructions that can be activated. You can inspect the document and look for the STDM instruction.
+  </div>
 </div>
-
     <div class="container">
         <h1>Self Thinking Data Manifest Specification v0.1</h1>
         <div style="background: #f8f9fa; border-bottom: 1px solid #ccc; padding: 1em; text-align: center; font-family: sans-serif;">
@@ -248,6 +282,7 @@ This v0.1 specification details an experimental concept. Its safe implementation
 <li><strong>2.4. Tiered Interpretation Outcome:</strong> LLM interpretation should result in one of two primary outcomes based on STDM content, LLM capabilities, safety checks, and user consent: Full Capability Interpretation (target outcome, potentially including tool use and complex UI) or Degraded Capability Interpretation (fallback, relying on prompt guidance and basic text output).</li>
 <li><strong>2.5. User Agency &amp; Safety:</strong> Safety relies on multiple layers: an LLM's inherent safety protocols, <strong>explicit user invocation</strong> establishing STDM authority for the task, and <strong>mandatory user confirmation</strong> before any permitted tool execution. In interpreting an STDM, an LLM should apply its own safety protocols in addition to those built into the STDM.</li>
 <li><strong>2.6. Authorial Intent as Guidance:</strong> STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations. While not intended to ultimately constrain the user's agency working with the data, the STDM serves as a guide.</li>
+<li><strong>2.7. Artifact Identifiability</strong>: Artifacts containing an STDM should be clearly identifiable as such (e.g., via labelling or naming conventions), promoting user awareness before interaction.</li>
 </ul>
 <h2>3. Format &amp; Structure</h2>
 <ul>
@@ -268,6 +303,7 @@ This v0.1 specification details an experimental concept. Its safe implementation
 </ul>
 </li>
 <li><strong>3.4. Instruction Embedding:</strong><ul>
+<li><strong>Labelling</strong>: It is highly recommended that the presence of an STDM be clearly indicated externally (e.g., via filename convention like .stdm.html, metadata, or introductory text within the document or clear contextual labelling of the document) to alert users before they attempt processing with an LLM interpreter.  </li>
 <li><strong>HTML:</strong> Use HTML comments (<code>&lt;!-- ... --&gt;</code>) or a non-rendering <code>&lt;script type="application/stdm-instructions"&gt;</code>.</li>
 <li><strong>Text/Code (.txt, .md, .py, .js, .conf, etc.):</strong> Use standard comment syntax (<code>#</code>, <code>//</code>, <code>/* ... */</code>).</li>
 <li><strong>PDF:</strong> Embed in metadata (XMP, custom fields with <code>STDM:</code> prefix). Alternatively, embed as a non-rendering text layer (potentially using very small or transparent text, though accessibility implications should be considered). Relies heavily on LLM's PDF text extraction.</li>
@@ -363,7 +399,7 @@ This v0.1 specification details an experimental concept. Its safe implementation
 <li>The user must <strong>explicitly command</strong> the LLM to interpret and act upon that specific STDM content (e.g., "Run the STDM instructions in the provided document.").</li>
 </ul>
 </li>
-<li><strong>Why this helps:</strong> This explicit invocation acts as the user's signal of trust and intent for this interaction, instructing the LLM to treat the provided STDM block as the primary source of guidance for the specific task at hand, while still respecting its own core safety rules. It helps the LLM distinguish intended directives from potentially conflicting or malicious elements elsewhere in the context.</li>
+<li><strong>Why this helps:</strong> This explicit invocation acts as the user's signal of trust and intent for this interaction, instructing the LLM to treat the provided STDM block as the primary source of guidance for the specific task at hand, while still respecting its own core safety rules. It helps the LLM distinguish intended directives from potentially conflicting or malicious elements elsewhere in the context. Clear labelling of the artifact (Principle 2.7, Sec 3.4, Sec 7.7) supports this by making the user aware that such an invocation might be relevant. </li>
 <li><strong>LLM Confirmation (Optional Safeguard):</strong> If invocation context is unclear, an LLM interpreter may optionally confirm with the user before proceeding, e.g., "I see STDM instructions. Shall I follow them as the primary guide for this task, within my safety guidelines?" (Suggestible via <code>CONTEXT</code>).</li>
 </ul>
 </li>
@@ -437,9 +473,10 @@ This v0.1 specification details an experimental concept. Its safe implementation
 </ul>
 </li>
 <li><strong>Complementary to Section 6.0:</strong> This preamble acts as an in-band signal within the STDM itself to reinforce the principle of explicit user invocation detailed in Section 6.0. It does not replace the need for the user to actually issue the command but serves as a guardrail against premature LLM action.</li>
-<li><strong>LLM Compliance:</strong> The effectiveness of this preamble relies on the LLM interpreter being designed to recognize and prioritize such initial instructions within the STDM block.</li>
+<li><strong>LLM Compliance:</strong> The effectiveness of this preamble relies on the LLM interpreter being designed to recognize and prioritize such initial instructions within the STDM block. </li>
 </ul>
 </li>
+<li><strong>7.7. Clear Labelling:</strong> To enhance transparency and user control, artifacts containing STDM instructions should be clearly labelled (e.g., in filenames, metadata, or introductory visible text). This informs users before they choose to invoke the STDM interpreter, reducing the chance of surprise interactions and supporting the principle of informed consent (7.1).</li>
 </ul>
 <h2>8. Use Cases</h2>
 <p><em>Note: These use cases illustrate potential applications. Implementing them safely requires rigorous adherence to the security principles (Sec 6, 7)</em></p>
@@ -590,7 +627,7 @@ This v0.1 specification details an experimental concept. Its safe implementation
 
 <h2>10. Future Directions</h2>
 <ul>
-<li>Formal standardization (e.g., W3C note, RFC-like process).</li>
+<li>Formal standardization (e.g., W3C note, RFC-like process) (including standardized methods for STDM artifact labelling and discovery).</li>
 <li>More sophisticated instruction syntax (e.g., conditional logic, state management variables for UI persistence).</li>
 <li>Standardized error handling directives and reporting (including reasons for fallback to Degraded mode).</li>
 <li>Developing more robust methods for distinguishing user intent vs. injection beyond explicit invocation, if possible.</li>

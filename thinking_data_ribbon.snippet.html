@@ -4,6 +4,31 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+.tooltip {
+  visibility: hidden;
+  width: 350px;
+  background-color: rgba(30, 30, 30, 0.9);
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px;
+  position: fixed;
+  z-index: 1000;
+  bottom: 30px;
+  left: 30px;
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+#thinking-data-ribbon:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
 </style>
 <div id="thinking-data-ribbon"
      style="position: fixed;
@@ -47,7 +72,7 @@
             letter-spacing: 0px;
             display: inline-block;
             padding: 0 3px;">
-    I am Thinking Data
+    This is Thinking Data
   </a>
   <span style="cursor: pointer;
                padding: 0 3px;
@@ -61,4 +86,7 @@
         onclick="document.getElementById('thinking-data-ribbon').style.display='none';">
     ×
   </span>
+  <div class="tooltip">
+    If you drag this into an LLM, there are embedded instructions that can be activated. You can inspect the document and look for the STDM instruction.
+  </div>
 </div>

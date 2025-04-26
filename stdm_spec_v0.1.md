@@ -36,6 +36,7 @@ This html version of this specification is itself an experimental STDM and addit
 *   **2.4. Tiered Interpretation Outcome:** LLM interpretation should result in one of two primary outcomes based on STDM content, LLM capabilities, safety checks, and user consent: Full Capability Interpretation (target outcome, potentially including tool use and complex UI) or Degraded Capability Interpretation (fallback, relying on prompt guidance and basic text output).
 *   **2.5. User Agency & Safety:** Safety relies on multiple layers: an LLM's inherent safety protocols, **explicit user invocation** establishing STDM authority for the task, and **mandatory user confirmation** before any permitted tool execution. In interpreting an STDM, an LLM should apply its own safety protocols in addition to those built into the STDM.
 *   **2.6. Authorial Intent as Guidance:** STDM instructions, particularly GOAL and CONSTRAINTS, often may reflect the author's intent regarding the data's use, context, and limitations. While not intended to ultimately constrain the user's agency working with the data, the STDM serves as a guide.
+*   **2.7. Artifact Identifiability**: Artifacts containing an STDM should be clearly identifiable as such (e.g., via labelling or naming conventions), promoting user awareness before interaction.
 
 ## 3. Format & Structure
 
@@ -50,6 +51,7 @@ This html version of this specification is itself an experimental STDM and addit
     *   **Option B (Implicit):** Instructions refer to the data contextually (e.g., "the main text body," "the HTML content," "the following code block," "the entire document outside the STDM block").
     *   **Emphasis on Text Payloads:** Due to current LLM capabilities, the most reliable data payloads within an STDM are typically textual representations (e.g., plain text, Markdown, code, textualized CSV/JSON). While the STDM container can be various file types, reliably interpreting complex embedded binary data formats directly is often problematic for LLMs compared to processing extracted text content present within their context window.
 *   **3.4. Instruction Embedding:**
+    *   **Labelling**: It is highly recommended that the presence of an STDM be clearly indicated externally (e.g., via filename convention like .stdm.html, metadata, or introductory text within the document or clear contextual labelling of the document) to alert users before they attempt processing with an LLM interpreter.  
     *   **HTML:** Use HTML comments (`<!-- ... -->`) or a non-rendering `<script type="application/stdm-instructions">`.
     *   **Text/Code (.txt, .md, .py, .js, .conf, etc.):** Use standard comment syntax (`#`, `//`, `/* ... */`).
     *   **PDF:** Embed in metadata (XMP, custom fields with `STDM:` prefix). Alternatively, embed as a non-rendering text layer (potentially using very small or transparent text, though accessibility implications should be considered). Relies heavily on LLM's PDF text extraction.
@@ -124,7 +126,7 @@ Leverage LLMs for efficiency but prioritize manual oversight for safety and corr
     *   **Mitigation via Explicit User Invocation:** The primary mechanism to ensure the LLM correctly interprets the STDM as the intended, user-authorized task guidance (rather than random text or a malicious injection) is explicit user action:
         *   The user must actively provide the STDM content (e.g., upload, paste). Passive ingestion is insecure.
         *   The user must **explicitly command** the LLM to interpret and act upon that specific STDM content (e.g., "Run the STDM instructions in the provided document.").
-    *   **Why this helps:** This explicit invocation acts as the user's signal of trust and intent for this interaction, instructing the LLM to treat the provided STDM block as the primary source of guidance for the specific task at hand, while still respecting its own core safety rules. It helps the LLM distinguish intended directives from potentially conflicting or malicious elements elsewhere in the context.
+    *   **Why this helps:** This explicit invocation acts as the user's signal of trust and intent for this interaction, instructing the LLM to treat the provided STDM block as the primary source of guidance for the specific task at hand, while still respecting its own core safety rules. It helps the LLM distinguish intended directives from potentially conflicting or malicious elements elsewhere in the context. Clear labelling of the artifact (Principle 2.7, Sec 3.4, Sec 7.7) supports this by making the user aware that such an invocation might be relevant. 
     *   **LLM Confirmation (Optional Safeguard):** If invocation context is unclear, an LLM interpreter may optionally confirm with the user before proceeding, e.g., "I see STDM instructions. Shall I follow them as the primary guide for this task, within my safety guidelines?" (Suggestible via `CONTEXT`).
 *   **6.1. Interpretation Outcome: Full Capability Interpretation**
     *   This is the target outcome when an STDM requires capabilities beyond basic text processing. It assumes:
@@ -180,7 +182,8 @@ Leverage LLMs for efficiency but prioritize manual oversight for safety and corr
         *   **Acknowledge & Wait (If No Command):** If no explicit command was given, the LLM should inform the user it has found an STDM (and ideally state its purpose/GOAL) and wait for the user to provide the necessary invocation command.
         *   **Proceed (If Commanded):** If an explicit command was given, the preamble has served its purpose, and the LLM can proceed with the rest of the STDM interpretation (following the steps in Section 6.1 or 6.2).
     *   **Complementary to Section 6.0:** This preamble acts as an in-band signal within the STDM itself to reinforce the principle of explicit user invocation detailed in Section 6.0. It does not replace the need for the user to actually issue the command but serves as a guardrail against premature LLM action.
-    *   **LLM Compliance:** The effectiveness of this preamble relies on the LLM interpreter being designed to recognize and prioritize such initial instructions within the STDM block.
+    *   **LLM Compliance:** The effectiveness of this preamble relies on the LLM interpreter being designed to recognize and prioritize such initial instructions within the STDM block. 
+*   **7.7. Clear Labelling:** To enhance transparency and user control, artifacts containing STDM instructions should be clearly labelled (e.g., in filenames, metadata, or introductory visible text). This informs users before they choose to invoke the STDM interpreter, reducing the chance of surprise interactions and supporting the principle of informed consent (7.1).
 
 ## 8. Use Cases
 
@@ -332,7 +335,7 @@ USER_PROMPT_TEMPLATE: This interactive report (STDM) requests permission to use 
 </html>
 ```
 ## 10. Future Directions
-* Formal standardization (e.g., W3C note, RFC-like process).
+* Formal standardization (e.g., W3C note, RFC-like process) (including standardized methods for STDM artifact labelling and discovery).
 * More sophisticated instruction syntax (e.g., conditional logic, state management variables for UI persistence).
 * Standardized error handling directives and reporting (including reasons for fallback to Degraded mode).
 * Developing more robust methods for distinguishing user intent vs. injection beyond explicit invocation, if possible.

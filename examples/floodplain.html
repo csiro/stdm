@@ -237,7 +237,7 @@ The caption notes that an AEP of 0.05 is equivalent to an Average Recurrence Int
 For the six irrigation and ecological sites, an intensification of 1-in-20-year floodplain inundation is projected at all sites except Barmah. This exception is due to Barmah's southernmost location, where the significant decline in cool-season rainfall results in drier antecedent catchment conditions, outweighing the effects of increased extreme rainfall. Conversely, a marked increase in 1-in-20-year floodplain inundation is projected for Macquarie, a site located in the northern MDB. This underscores the need for region-specific water management strategies, particularly in areas like Barmah and Macquarie.
 
 Discussion
-The knowledge from this study has significant implications for communities, decision-makers, environmental watering, and stakeholders in the MDB. We found that the maximum 30-day runoff closely correlated with floodplain inundation in the MDB. This finding offers a reliable proxy for floodplain inundation, which is useful for applications such as land-use planning, habitat restoration, and water resource management, particularly given the scarcity of reliable spatial inundation data.
+The knowledge from this study has significant implications for communities, decision-makers, environmental watering, and stakeholders in the MDB. We found that the maximum 30-day runoff losely correlated with floodplain inundation in the MDB. This finding offers a reliable proxy for floodplain inundation, which is useful for applications such as land-use planning, habitat restoration, and water resource management, particularly given the scarcity of reliable spatial inundation data.
 Future runoff in the MDB is likely to decrease under climate change due to projected reduction in cool season rainfall and accentuated by higher potential evaporation⁵¹. This outlook is supported by multiple lines of
 
 Scientific Reports | (2025) 15:8917 | https://doi.org/10.1038/s41598-025-93670-6 nature portfolio 6
@@ -707,6 +707,50 @@ footer {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+.tooltip {
+  visibility: hidden;
+  width: 300px;
+  background-color: #fff;
+  color: #333;
+  text-align: center;
+  border-radius: 20px;
+  padding: 15px;
+  position: fixed;
+  z-index: 900;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s, visibility 0.3s;
+  font-size: 9px;
+  line-height: 1.5;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border: 2px solid #ddd;
+}
+
+/* Thought bubble pointer */
+.tooltip:after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  right: 30px;
+  border-width: 0 15px 15px;
+  border-style: solid;
+  border-color: #fff transparent;
+  display: block;
+  width: 0;
+}
+
+#thinking-data-ribbon:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+#thinking-data-ribbon .close-btn{
+  position: relative;
+  z-index: 1001;
+}
+
 </style>
 <div id="thinking-data-ribbon"
      style="position: fixed;
@@ -750,9 +794,10 @@ footer {
             letter-spacing: 0px;
             display: inline-block;
             padding: 0 3px;">
-    I am Thinking Data
+    Thinking Data
   </a>
-  <span style="cursor: pointer;
+  <span class="close-btn" style="cursor: pointer;
+               transform: translate(20px, 10px);
                padding: 0 3px;
                margin-left: 1px;
                font-size: 14px;
@@ -764,6 +809,9 @@ footer {
         onclick="document.getElementById('thinking-data-ribbon').style.display='none';">
     ×
   </span>
+  <div class="tooltip">
+    Save page <br/> drag to LLM to activate embedded instructions <br/> view source to inspect instructions
+  </div>
 </div>
     <main>
         <section id="map-section">
