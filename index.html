@@ -278,15 +278,17 @@ DATA_MARKERS: Present (DATA START / DATA END within HTML comments)
 <p><sup>1</sup>Corresponding Author: Ben.Leighton@csiro.au<br>
 <sup>2</sup>CSIRO Environmental Informatics<br>
 <sup>3</sup>CSIRO Water Security</p>
-<blockquote>
-<p><strong>Note:</strong><br>
-This v0.1 specification details an experimental concept. Its safe implementation relies heavily on the security principles outlined within (especially Sections 6.0, 7.1, and 7.6) and requires careful consideration by implementers. This document is intended for discussion and research.</p>
-</blockquote>
 <h2>Version 0.1 - Draft for Discussion &amp; Experimentation</h2>
-<p>This document specifies the Self-Thinking Data Manifest (STDM) v0.1, an initial exploration into embedding dynamic capabilities within data artifacts using Large Language Models (LLMs). It aims to unlock new interactive and analytical possibilities, illustrated by the accompanying experimental examples.</p>
-<p>Guiding LLMs reliably presents challenges, including known security risks like prompt injection. STDM addresses this not by ignoring risks, but by proposing a defined structure (explicit directives, goals, constraints) to move beyond ad-hoc prompting towards more transparent, author-guided, and potentially programmable LLM interactions. The goal is to enhance data utility, preserve authorial intent, and increase predictability.</p>
-<p>Recognizing the risks, STDM v0.1 incorporates specific mitigation strategies like explicit user invocation and mandatory consent gates for tool use. However, this specification is a foundational proposal, not a solution. Robust safety, reliable interpretation, and the evolution towards sophisticated LLM-data interaction require rigorous analysis, community collaboration, and further innovation. We welcome feedback and critical evaluation.</p>
-<p>This html version of this specification is itself an experimental STDM and additional examples are provided both in the specification and the accompanying repository</p>
+<p>This document outlines the Self-Thinking Data Manifest (STDM) v0.1 specification. STDM proposes a method for embedding structured instructions directly within data artifacts (like documents, web pages, or code files). The primary aim is to enable more specific, reliable, and interactive experiences when users engage with these artifacts through Large Language Models (LLMs).</p>
+<p>By defining a clear structure for instructions (including goals, constraints, and potential tool usage), STDM moves beyond simple prompting. It offers authors a way to guide the LLM's interpretation and interaction with the associated data, potentially creating custom interfaces or workflows.</p>
+<p>Recognizing the inherent risks associated with instructing LLMs (such as potential prompt injection or misuse), STDM incorporates a multi-layered safety approach. This includes:</p>
+<ul>
+<li><strong>Structured Directives:</strong> Providing clear boundaries and goals (<code>GOAL</code>, <code>CONSTRAINTS</code>).</li>
+<li><strong>Explicit User Invocation:</strong> Requiring the user to consciously activate the STDM instructions (Sec 6.0, 7.6).</li>
+<li><strong>Mandatory Consent:</strong> Ensuring user approval before any potentially sensitive actions like tool execution (Sec 6.1, 7.1).</li>
+<li><strong>LLM Core Safety Reliance:</strong> Operating within, and not attempting to override, the LLM interpreter's fundamental safety protocols (Sec 6.0).</li>
+</ul>
+<p>This v0.1 specification serves as a foundational proposal intended for discussion, experimentation, and community feedback. Its development is ongoing, and insights from practical application and security analysis are crucial for future refinement.</p>
 <h2>1. Introduction &amp; Goal</h2>
 <ul>
 <li><strong>1.1. Definition:</strong> A Self-Thinking Data Manifest (STDM) is a digital artifact (e.g., HTML, text file, PDF, image metadata) that bundles primary data content (often text) with explicit instructions. These instructions define how a Large Language Model (LLM), acting as an external interpreter engine, should process, interact with, present, or execute tasks related to the STDM's embedded data. The term 'Self-Thinking' is used evocatively to denote the manifest's capability to provide self-contained directions for an external LM interpreter's actions, reasoning, and presentation concerning the associated data. </li>
@@ -682,19 +684,19 @@ This v0.1 specification details an experimental concept. Its safe implementation
 
     function downloadExample() {
         try {
-            // Find the H2/H3 for Section 9, then find the next pre > code element containing <!DOCTYPE html>
-            const section9Heading = document.querySelector('h2:nth-of-type(9), h3:nth-of-type(9)');
-            // Fallback for older docs that might have different heading structure
+            // Find the H2 or H3 heading containing "Example Implementation"
             const allHeadings = document.querySelectorAll('h2, h3');
-            let section9HeadingFallback = null;
+            let sectionHeading = null;
             allHeadings.forEach(heading => {
-              if (heading.textContent.includes('Example Implementation')) section9HeadingFallback = heading;
+              // Use a regex for more flexible matching (case-insensitive, ignores leading/trailing spaces/numbers)
+              if (/^\s*(?:9\.\s*)?Example Implementation\s*$/i.test(heading.textContent.trim())) {
+                 sectionHeading = heading;
+              }
             });
-            const finalSection9Heading = section9Heading || section9HeadingFallback;
 
-            if (!finalSection9Heading) throw new Error("Section 9 heading not found");
+            if (!sectionHeading) throw new Error("Heading containing 'Example Implementation' not found");
 
-            let sibling = finalSection9Heading.nextElementSibling;
+            let sibling = sectionHeading.nextElementSibling;
             let exampleCodeElement = null;
 
             while(sibling) {
@@ -721,7 +723,7 @@ This v0.1 specification details an experimental concept. Its safe implementation
             }
 
             if (!exampleCodeElement) {
-                 throw new Error("Example HTML code block not found after Section 9 heading. Searched for <div class='codehilite'> or <pre> containing <!DOCTYPE html>.");
+                 throw new Error("Example HTML code block not found after the 'Example Implementation' heading. Searched for <div class='codehilite'> or <pre> containing <!DOCTYPE html>.");
             }
 
             // Unescape HTML entities to get the original source code

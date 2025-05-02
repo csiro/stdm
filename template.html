@@ -119,31 +119,50 @@ document.addEventListener('DOMContentLoaded', () => {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
 .tooltip {
   visibility: hidden;
-  width: 350px;
-  background-color: rgba(30, 30, 30, 0.9);
-  color: #fff;
+  width: 300px;
+  background-color: #fff;
+  color: #333;
   text-align: center;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 20px;
+  padding: 15px;
   position: fixed;
-  z-index: 1000;
-  bottom: 30px;
-  left: 30px;
+  z-index: 900;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   opacity: 0;
   transition: opacity 0.3s, visibility 0.3s;
-  font-size: 14px;
+  font-size: 9px;
   line-height: 1.5;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border: 2px solid #ddd;
+}
+
+/* Thought bubble pointer */
+.tooltip:after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  right: 30px;
+  border-width: 0 15px 15px;
+  border-style: solid;
+  border-color: #fff transparent;
+  display: block;
+  width: 0;
 }
 
 #thinking-data-ribbon:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
+
+#thinking-data-ribbon .close-btn{
+  position: relative;
+  z-index: 1001;
+}
+
 </style>
 <div id="thinking-data-ribbon"
      style="position: fixed;
@@ -187,9 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
             letter-spacing: 0px;
             display: inline-block;
             padding: 0 3px;">
-    This is Thinking Data
+    Thinking Data
   </a>
-  <span style="cursor: pointer;
+  <span class="close-btn" style="cursor: pointer;
+               transform: translate(20px, 10px);
                padding: 0 3px;
                margin-left: 1px;
                font-size: 14px;
@@ -202,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ×
   </span>
   <div class="tooltip">
-    If you drag this into an LLM, there are embedded instructions that can be activated. You can inspect the document and look for the STDM instruction.
+    Save page <br/> drag to LLM to activate embedded instructions <br/> view source to inspect instructions
   </div>
 </div>
     <div class="container">
@@ -249,19 +269,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function downloadExample() {
         try {
-            // Find the H2/H3 for Section 9, then find the next pre > code element containing <!DOCTYPE html>
-            const section9Heading = document.querySelector('h2:nth-of-type(9), h3:nth-of-type(9)');
-            // Fallback for older docs that might have different heading structure
+            // Find the H2 or H3 heading containing "Example Implementation"
             const allHeadings = document.querySelectorAll('h2, h3');
-            let section9HeadingFallback = null;
+            let sectionHeading = null;
             allHeadings.forEach(heading => {
-              if (heading.textContent.includes('Example Implementation')) section9HeadingFallback = heading;
+              // Use a regex for more flexible matching (case-insensitive, ignores leading/trailing spaces/numbers)
+              if (/^\s*(?:9\.\s*)?Example Implementation\s*$/i.test(heading.textContent.trim())) {
+                 sectionHeading = heading;
+              }
             });
-            const finalSection9Heading = section9Heading || section9HeadingFallback;
 
-            if (!finalSection9Heading) throw new Error("Section 9 heading not found");
+            if (!sectionHeading) throw new Error("Heading containing 'Example Implementation' not found");
 
-            let sibling = finalSection9Heading.nextElementSibling;
+            let sibling = sectionHeading.nextElementSibling;
             let exampleCodeElement = null;
 
             while(sibling) {
@@ -288,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (!exampleCodeElement) {
-                 throw new Error("Example HTML code block not found after Section 9 heading. Searched for <div class='codehilite'> or <pre> containing <!DOCTYPE html>.");
+                 throw new Error("Example HTML code block not found after the 'Example Implementation' heading. Searched for <div class='codehilite'> or <pre> containing <!DOCTYPE html>.");
             }
 
             // Unescape HTML entities to get the original source code

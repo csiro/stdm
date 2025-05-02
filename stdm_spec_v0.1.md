@@ -8,18 +8,20 @@ Ben Leighton^1,2^, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan 
 ^2^CSIRO Environmental Informatics  
 ^3^CSIRO Water Security
 
-> **Note:**  
-> This v0.1 specification details an experimental concept. Its safe implementation relies heavily on the security principles outlined within (especially Sections 6.0, 7.1, and 7.6) and requires careful consideration by implementers. This document is intended for discussion and research.
-
 ## Version 0.1 - Draft for Discussion & Experimentation
 
-This document specifies the Self-Thinking Data Manifest (STDM) v0.1, an initial exploration into embedding dynamic capabilities within data artifacts using Large Language Models (LLMs). It aims to unlock new interactive and analytical possibilities, illustrated by the accompanying experimental examples.
+This document outlines the Self-Thinking Data Manifest (STDM) v0.1 specification. STDM proposes a method for embedding structured instructions directly within data artifacts (like documents, web pages, or code files). The primary aim is to enable more specific, reliable, and interactive experiences when users engage with these artifacts through Large Language Models (LLMs).
 
-Guiding LLMs reliably presents challenges, including known security risks like prompt injection. STDM addresses this not by ignoring risks, but by proposing a defined structure (explicit directives, goals, constraints) to move beyond ad-hoc prompting towards more transparent, author-guided, and potentially programmable LLM interactions. The goal is to enhance data utility, preserve authorial intent, and increase predictability.
+By defining a clear structure for instructions (including goals, constraints, and potential tool usage), STDM moves beyond simple prompting. It offers authors a way to guide the LLM's interpretation and interaction with the associated data, potentially creating custom interfaces or workflows.
 
-Recognizing the risks, STDM v0.1 incorporates specific mitigation strategies like explicit user invocation and mandatory consent gates for tool use. However, this specification is a foundational proposal, not a solution. Robust safety, reliable interpretation, and the evolution towards sophisticated LLM-data interaction require rigorous analysis, community collaboration, and further innovation. We welcome feedback and critical evaluation.
+Recognizing the inherent risks associated with instructing LLMs (such as potential prompt injection or misuse), STDM incorporates a multi-layered safety approach. This includes:
 
-This html version of this specification is itself an experimental STDM and additional examples are provided both in the specification and the accompanying repository
+*   **Structured Directives:** Providing clear boundaries and goals (`GOAL`, `CONSTRAINTS`).
+*   **Explicit User Invocation:** Requiring the user to consciously activate the STDM instructions (Sec 6.0, 7.6).
+*   **Mandatory Consent:** Ensuring user approval before any potentially sensitive actions like tool execution (Sec 6.1, 7.1).
+*   **LLM Core Safety Reliance:** Operating within, and not attempting to override, the LLM interpreter's fundamental safety protocols (Sec 6.0).
+
+This v0.1 specification serves as a foundational proposal intended for discussion, experimentation, and community feedback. Its development is ongoing, and insights from practical application and security analysis are crucial for future refinement.
 
 ## 1. Introduction & Goal
 
