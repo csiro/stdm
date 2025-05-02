@@ -4,8 +4,8 @@ STDM enables data artifacts, including documents, to guide their own interpretat
 
 ## ⚠️ Caution
 
-The v0.1 specification details an experimental concept. Implementation requires careful consideration of the security principles outlined in sections 6.0, 7.1, and 7.6.
-STDM is an experimental framework still in early development. While it aims to enhance data utility and preserve author intent, it involves directing LLM behavior which carries inherent risks, including causing unexpected behaviour. The specification incorporates mitigation strategies, but users should approach implementation with appropriate caution and security considerations.
+The v0.1 specification details an experimental concept. Implementation requires consideration of the security principles outlined in sections 6.0, 7.1, and 7.6.
+STDM is in early development. While it aims to enhance data utility and preserve author intent, it involves directing LLM behavior which carries risks, including causing unexpected behaviour. The specification incorporates mitigation strategies, but the community should apply appropriate caution and security considerations.
 
 ## What is STDM?
 
@@ -68,9 +68,9 @@ python build/build.py stdm_spec_v0.1.md instructions.txt template.html index.htm
 
 **Q4: Isn't STDM just enabling or facilitating malicious prompt injection?**
 
-**A:** STDM acknowledges the risks associated with LLMs processing external instructions, including malicious prompt injection, but proposes specific mechanisms centered on **user control and explicit intent** to mitigate these risks.
+**A:** STDM acknowledges the risks associated with LLMs processing external instructions, including malicious prompt injection. It proposes specific mechanisms centered on **user control and explicit intent** to mitigate these risks.
 
-*   **Existing Challenge:** Malicious prompt injection techniques, where hidden instructions attempt to hijack the LLM's behavior or bypass safety measures, are an existing challenge for *all* LLM interactions, independent of STDM. STDM does not introduce fundamentally new injection vectors.
+*   **Existing Challenge:** Malicious prompt injection techniques, where hidden instructions attempt to hijack the LLM's behavior or bypass safety measures, are an existing challenge for *all* LLM interactions, independent of STDM. STDM does not introduce new injection vectors nor publicise existing approaches.
 *   **STDM Scope & Intent:** The STDM specification (v0.1) does **not** explore, test, or intend methods to override LLM safety protocols or existing prompt injection defenses. Its design aims to operate transparently *within* those safety boundaries, providing *authorized*, task-specific guidance.
 *   **Mitigation 1: Explicit User Invocation (Sec 6.0, 7.6):** The core safety principle is that an LLM interpreter should *not* automatically execute an STDM upon detection. The user *must explicitly command* the LLM to process the STDM instructions for the provided artifact (e.g., "Run the STDM in this document"). This signals user trust and intent for *that specific task*, helping the LLM differentiate the STDM instructions (as authorized guidance) from potentially unauthorized or malicious input. The mandatory Safety Preamble reinforces this critical step.
 *   **Mitigation 2: Tool Use Consent Gate (Sec 6.1, 7.1):** Even if the user invokes the STDM, any action requiring potentially risky tools (like code execution or web access) requires a *second*, specific, informed consent step from the user before execution. The STDM can only *request* tools; the user *authorizes* their use for the stated purpose.
@@ -79,11 +79,11 @@ python build/build.py stdm_spec_v0.1.md instructions.txt template.html index.htm
 
 **Q5: How does a user know if a document contains an STDM?**
 
-**A:** This specification (v0.1) focuses on the format and LLM interpretation. User interface aspects for detection need further development, but possibilities include:
+**A:** This specification (v0.1) focuses on the format and LLM interpretation. Artifacts containing an STDM should be clearly identifiable as such (e.g., via labelling or naming conventions), promoting user awareness before interaction. Additional mechansisms include: 
 
 *   **LLM Interpreter Notification:** Upon receiving a document and an explicit "run" command, the LLM interpreter should ideally notify the user that it has detected STDM instructions and state the `GOAL` before proceeding (as guided by the Safety Preamble).
 *   **File Naming/Metadata:** Authors could use naming conventions (e.g., `.stdm.html`) or explicit metadata fields.
-*   **Visual Indicators:** Future applications or platforms processing STDMs could potentially display an icon or notice indicating the presence of embedded instructions.
+*   **Visual Indicators:** Documents could icon or notice indicating the presence of embedded instructions. An example banner is provided.
 *   **Transparency Principle (Sec 2.3):** While instructions shouldn't interfere with normal viewing, they should be accessible for review. How this is best implemented in different file types is an area for exploration.
 
 **Q6: What happens if an STDM author has malicious intent (e.g., creates a manipulative UI or misleading GOAL)?**
@@ -112,7 +112,3 @@ python build/build.py stdm_spec_v0.1.md instructions.txt template.html index.htm
 *   **Interpreter Dependence:** Effectiveness relies heavily on the LLM's capabilities to understand the instructions and the handling system's adherence to the spec (especially safety protocols like invocation checks and consent gates), and its ability to render UIs or use tools.
 *   **Security Reliance:** Security hinges significantly on correct implementation and enforcement of user invocation checks and consent gates by the LLM handling system, and the LLM's own safety foundation.
 *   **Standardization:** It's not yet a formal standard, meaning interoperability is not guaranteed.
-
-## Contributing
-
-We welcome feedback, examples, and contributions to help evolve this specification into a robust standard for LLM-data interaction.
