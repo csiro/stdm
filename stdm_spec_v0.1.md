@@ -78,7 +78,8 @@ All directives and content within the instruction block **must** strive for cons
         *   `none`: Explicitly indicates no tool use is requested by the STDM.
         *   `web_retrieval`: Indicates the STDM might require web searches (subject to CONSTRAINTS and user approval).
         *   `code_interpreter`: Indicates the STDM might require sandboxed code execution (e.g., Python, JS) (subject to user approval). Sandboxed execution may involve temporary, isolated file operations within the sandbox.
-        *   `PERSONA`: **(Optional)** Defines the LLM's interaction style, tone, role, or character. Works in conjunction with `CUSTOM_UI_DEFINITION`. Example: `"Adopt the persona of a patient tutor."`
+*   `PERSONA`: **(Optional)** Defines the LLM's interaction style, tone, role, or character. Works in conjunction with `CUSTOM_UI_DEFINITION`. Example: `"Adopt the persona of a patient tutor."`
+*   `CONTACT`: **(Optional)** Provides information on who to contact if a user has issues, concerns, or questions about the STDM's behavior or content. This directive helps establish a feedback channel and can enhance user trust. Example: `"If you have any concerns about this STDM's operation or believe it is malfunctioning, please contact support@example.com with details of the STDM and the issue observed."`
 *   `CUSTOM_UI_DEFINITION`: **(Optional, Recommended)** Describes the UI structure, format, and/or persistent elements. Generally, the initial UI should be rendered immediately upon parsing the STDM, before subsequent interaction. Requires fallback instructions for less capable environments.
     *   **Format:** Textual Description, Markdown Template
     *   **Purpose:** Enables interactive menus, game interfaces, status displays, etc. Guides the LLM on presentation.
@@ -167,7 +168,7 @@ Leverage LLMs for efficiency but prioritize manual oversight for safety and corr
 *   **7.2. Tool Usage:** LLMs should only attempt to use tools if they are listed in `REQUESTED_TOOLS` (and not `none`), if the `GOAL` necessitates it, if safety protocols allow, and if the user grants permission. The STDM requests, the user authorizes.
 *   **7.3. Instruction Clarity:** Essential for achieving intended behavior and minimizing misinterpretation. A clear `GOAL` is vital, especially if `CONSTRAINTS` are omitted. Instructions may cross reference. For example a `GOAL` may refer to the desire to render a `CUSTOM_UI_DEFINITION`
 *   **7.4. Transparent Risk Communication:** Confirmation prompts for tool use must clearly state potential risks.
-*   **7.5. Seamless UX:** Aim for STDM instructions to be invisible infrastructure enabling the desired interaction flow. The defined UI should enhance interaction. Clarity in directives like GOAL, and the use of CONSTRAINTS, is essential for a predictable and reliable user experience, especially when authors aim to guide interactions precisely. The aim should be a positive, clear, and non-manipulative user experience that aligns with the STDM's stated GOAL and PERSONA, avoiding deceptive patterns ('dark patterns'). 
+*   **7.5. Seamless UX:** Aim for STDM instructions to be invisible infrastructure enabling the desired interaction flow. The defined UI should enhance interaction. Clarity in directives like GOAL, and the use of CONSTRAINTS, is essential for a predictable and reliable user experience, especially when authors aim to guide interactions precisely. The aim should be a positive, clear, and non-manipulative user experience that aligns with the STDM's stated GOAL and PERSONA, avoiding deceptive patterns ('dark patterns'). The inclusion of a `CONTACT` directive can further enhance user trust by providing a clear channel for feedback or to report issues.
 *   **7.6. Mandatory Safety Preamble Instruction (Mitigating Proactive Execution):**
     *   **Problem:** Some LLM interfaces might proactively attempt to interpret or execute STDM instructions immediately upon detecting the [STDM START] block, even without a clear, explicit user command to do so (as required by Section 6.0). This can lead to unexpected behavior and bypasses user intent.
     *   **Recommendation:** To mitigate this risk, it is mandatory that all STDMs include a standard "Safety Preamble" instruction block. It is recommended that this is the very first item immediately following the [STDM START] delimiter (or after STDM_VERSION if present).
@@ -244,6 +245,8 @@ CONSTRAINTS:
 REQUESTED_TOOLS: code_interpreter
 
 PERSONA: Act as a helpful and precise data analyst assistant.
+
+CONTACT: If you have any concerns about this STDM's operation or believe it is malfunctioning, please contact support@example.com with details of the STDM and the issue observed.
 
 CUSTOM_UI_DEFINITION:
 Format: Textual Description targeting Markdown/Simple HTML rendering.
