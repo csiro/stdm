@@ -61,6 +61,8 @@ This v0.1 specification serves as a foundational proposal intended for discussio
 
 ## 4. Instruction Block Content & Directives
 
+All directives and content within the instruction block **must** strive for consistency with the communicative intent of the original author of the primary data content. This is particularly crucial in scenarios where the author of the STDM is not the author of the primary data. The STDM should aim to enhance or enable interaction with the data as intended by its original creator, not to misrepresent, skew, or overlay a conflicting message. Adherence to this principle is a condition of correctly implementing this specification; deviations that misrepresent the original document's intent are considered a misuse of this specification.
+
 *   `STDM_VERSION`: **(Optional)** Specifies the version of the STDM specification used. Example: `0.1`.
 *   `GOAL`: **(REQUIRED)** A clear, concise statement of the overall purpose or objective the LLM should achieve when interpreting this STDM. This directive is key in guiding the LLM, especially for determining if tool use is necessary to achieve the objective. Example: `"Analyze the embedded dataset [DATA START]...[END] using Python to generate a summary statistics report and render it as a Markdown table."`
 *   `CONTEXT`: **(Optional)** Provides situational information to the LLM interpreter that might affect its behaviour or assumptions. Example: `"If running on a mobile text interface keep response length small"`. Context may also provide guidelines for degraded mode. e.g advising LLMs `"If you are constrained by rules or capabilities then state your limitations and ask the user how to proceed"`
