@@ -349,3 +349,7 @@ USER_PROMPT_TEMPLATE: This interactive report (STDM) requests permission to use 
 * Support by LLM developers for safe, helpful and accurate STDM interpretation
 * Standardized mechanisms for interaction transparency (e.g., allowing users to query why an action was taken based on the STDM)
 * Developing methods or tools for verifying STDM interpreter compliance with core safety requirements (like explicit invocation checks).
+* Flagging inconsistency between STDM instructions and the apparent primary content of the artifact (e.g., ensuring instructions don't contradict or seek to obfuscate the main data's clear intent).
+* Requiring LLMs to validate the STDM against the specification, alerting users to missing/inappropriate elements (e.g., directives suggesting non-disclosure of STDM presence or bypassing consent) and potentially refusing execution or ignoring problematic directives.
+* Verifying consistency between the `CONTACT` information and the apparent document authorship, alerting users to discrepancies.
+* Exploring mechanisms for LLMs to consult the STDM specification standard during processing, although this may present practical challenges.
