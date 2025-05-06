@@ -161,7 +161,7 @@ Leverage LLMs for efficiency but prioritize manual oversight for safety and corr
 
 ## 7. Security & User Experience
 
-*   **7.1. Informed Consent is Paramount:** Required before any tool execution requested by the STDM. Consent must be explicit, informed, and specific to the action/tool.
+*   **7.1. Informed Consent is Paramount:** True informed consent requires that the user is first aware of the presence of an STDM within the artifact (as per Sec 2.7, 3.4, 7.7). Following this awareness, explicit, informed, and specific consent is mandatory before any tool execution requested by the STDM.
 *   **7.2. Tool Usage:** LLMs should only attempt to use tools if they are listed in `REQUESTED_TOOLS` (and not `none`), if the `GOAL` necessitates it, if safety protocols allow, and if the user grants permission. The STDM requests, the user authorizes.
 *   **7.3. Instruction Clarity:** Essential for achieving intended behavior and minimizing misinterpretation. A clear `GOAL` is vital, especially if `CONSTRAINTS` are omitted. Instructions may cross reference. For example a `GOAL` may refer to the desire to render a `CUSTOM_UI_DEFINITION`
 *   **7.4. Transparent Risk Communication:** Confirmation prompts for tool use must clearly state potential risks.
