@@ -53,7 +53,7 @@ This v0.1 specification serves as a foundational proposal intended for discussio
     *   **Option B (Implicit):** Instructions refer to the data contextually (e.g., "the main text body," "the HTML content," "the following code block," "the entire document outside the STDM block").
     *   **Emphasis on Text Payloads:** Due to current LLM capabilities, the most reliable data payloads within an STDM are typically textual representations (e.g., plain text, Markdown, code, textualized CSV/JSON). While the STDM container can be various file types, reliably interpreting complex embedded binary data formats directly is often problematic for LLMs compared to processing extracted text content present within their context window.
 *   **3.4. Instruction Embedding:**
-    *   **Labelling**: It is highly recommended that the presence of an STDM be clearly indicated externally (e.g., via filename convention like .stdm.html, metadata, or introductory text within the document or clear contextual labelling of the document) to alert users before they attempt processing with an LLM interpreter.  
+    *   **Labelling**: The presence of an STDM **must** be clearly indicated externally (e.g., via filename convention like .stdm.html, metadata, or introductory text within the document or clear contextual labelling of the document) to alert users before they attempt processing with an LLM interpreter.  
     *   **HTML:** Use HTML comments (`<!-- ... -->`) or a non-rendering `<script type="application/stdm-instructions">`.
     *   **Text/Code (.txt, .md, .py, .js, .conf, etc.):** Use standard comment syntax (`#`, `//`, `/* ... */`).
     *   **PDF:** Embed in metadata (XMP, custom fields with `STDM:` prefix). Alternatively, embed as a non-rendering text layer (potentially using very small or transparent text, though accessibility implications should be considered). Relies heavily on LLM's PDF text extraction.
@@ -185,7 +185,7 @@ Leverage LLMs for efficiency but prioritize manual oversight for safety and corr
         *   **Proceed (If Commanded):** If an explicit command was given, the preamble has served its purpose, and the LLM can proceed with the rest of the STDM interpretation (following the steps in Section 6.1 or 6.2).
     *   **Complementary to Section 6.0:** This preamble acts as an in-band signal within the STDM itself to reinforce the principle of explicit user invocation detailed in Section 6.0. It does not replace the need for the user to actually issue the command but serves as a guardrail against premature LLM action.
     *   **LLM Compliance:** The effectiveness of this preamble relies on the LLM interpreter being designed to recognize and prioritize such initial instructions within the STDM block. 
-*   **7.7. Clear Labelling:** To enhance transparency and user control, artifacts containing STDM instructions should be clearly labelled (e.g., in filenames, metadata, or introductory visible text). This informs users before they choose to invoke the STDM interpreter, reducing the chance of surprise interactions and supporting the principle of informed consent (7.1).
+*   **7.7. Clear Labelling:** To enhance transparency and user control, artifacts containing STDM instructions **must** be clearly labelled (e.g., in filenames, metadata, or introductory visible text). This informs users before they choose to invoke the STDM interpreter, reducing the chance of surprise interactions and supporting the principle of informed consent (7.1).
 
 ## 8. Use Cases
 
