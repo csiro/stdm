@@ -1,4 +1,3 @@
-> © 2025 CSIRO - Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).  
 
 # Self-Thinking Data Manifest (STDM) v0.1 Specification
 
@@ -9,6 +8,8 @@ Ben Leighton^1,2^, Ashlin Lee^2^, Omid Rezvani^2^, David J. Penton^2^, Jonathan 
 ^1^Corresponding Author: Ben.Leighton@csiro.au  
 ^2^CSIRO Environmental Informatics  
 ^3^CSIRO Water Security
+
+© 2025 CSIRO - Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).  
 
 ## Version 0.1 - Draft for Discussion & Experimentation
 
