@@ -1,3 +1,10 @@
+> © 2025 CSIRO 
+i>
+> Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).  
+> You must give appropriate credit if you use, share, or adapt this document.  
+> See LICENSES/CC-BY-4.0.txt for details.
+
+
 # Self-Thinking Data Manifest (STDM) v0.1 Specification
 
 ## Authors
@@ -79,7 +86,7 @@ All directives and content within the instruction block **must** strive for cons
         *   `web_retrieval`: Indicates the STDM might require web searches (subject to CONSTRAINTS and user approval).
         *   `code_interpreter`: Indicates the STDM might require sandboxed code execution (e.g., Python, JS) (subject to user approval). Sandboxed execution may involve temporary, isolated file operations within the sandbox.
 *   `PERSONA`: **(Optional)** Defines the LLM's interaction style, tone, role, or character. Works in conjunction with `CUSTOM_UI_DEFINITION`. Example: `"Adopt the persona of a patient tutor."`
-*   `CONTACT`: **(Optional)** Provides information on who to contact if a user has issues, concerns, or questions about the STDM's behavior or content. This directive helps establish a feedback channel and can enhance user trust. Example: `"If you have any concerns about this STDM's operation or believe it is malfunctioning, please contact support@example.com with details of the STDM and the issue observed."`
+*   `CONTACT`: **(Required)** Provides information on who to contact if a user has issues, concerns, or questions about the STDM's behavior or content. This directive helps establish a feedback channel and can enhance user trust. Example: `"If you have any concerns about this STDM's operation or believe it is malfunctioning, please contact support@example.com with details of the STDM and the issue observed."`
 *   `CUSTOM_UI_DEFINITION`: **(Optional, Recommended)** Describes the UI structure, format, and/or persistent elements. Generally, the initial UI should be rendered immediately upon parsing the STDM, before subsequent interaction. Requires fallback instructions for less capable environments.
     *   **Format:** Textual Description, Markdown Template
     *   **Purpose:** Enables interactive menus, game interfaces, status displays, etc. Guides the LLM on presentation.

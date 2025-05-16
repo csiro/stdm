@@ -112,3 +112,5 @@ python build/build.py stdm_spec_v0.1.md instructions.txt template.html index.htm
 *   **Interpreter Dependence:** Effectiveness relies heavily on the LLM's capabilities to understand the instructions and the handling system's adherence to the spec (especially safety protocols like invocation checks and consent gates), and its ability to render UIs or use tools.
 *   **Security Reliance:** Security hinges significantly on correct implementation and enforcement of user invocation checks and consent gates by the LLM handling system, and the LLM's own safety foundation.
 *   **Standardization:** It's not yet a formal standard, meaning interoperability is not guaranteed.
+
+> © 2025 CSIRO 
