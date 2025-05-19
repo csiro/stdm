@@ -7,12 +7,17 @@ STDM enables data artifacts, including documents, to guide their own interpretat
 The v0.1 specification details an experimental concept. Implementation requires consideration of the security principles outlined in sections 6.0, 7.1, and 7.6.
 STDM is in early development. While it aims to enhance data utility and preserve author intent, it involves directing LLM behavior which carries risks, including causing unexpected behaviour. The specification incorporates mitigation strategies, but the community should apply appropriate caution and security considerations.
 
-![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - saving the page](stdm1.gif)
-![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - using the page](stdm2.gif)
-
 ## What is STDM?
 
 STDM embeds structured instructions within documents, images, or data files that direct how LLMs should process, analyze, and present the data. This creates "smart artifacts" capable of:
+
+[floodplain.html](examples/floodplain.html) - An interactive HTML poster of the open access paper "Floodplain inundation in the Murray–Darling Basin under current and future climate conditions." 
+![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - saving the page](stdm1.gif)
+![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - using the page](stdm2.gif)
+
+[floodplain.pdf](examples/floodplain.pdf) - An interactive PDF version 
+![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - saving the page](stdm3.gif)
+![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - using the page](stdm4.gif)
 
 - Rendering interactive interfaces with custom navigation
 - Executing data analysis on embedded content
