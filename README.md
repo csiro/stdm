@@ -9,7 +9,7 @@ STDM is in early development. While it aims to enhance data utility and preserve
 
 ## What is STDM?
 
-STDM embeds structured instructions within documents, images, or data files that direct how LLMs should process, analyze, and present the data. This creates "smart artifacts" capable of:
+STDM embeds structured instructions within documents, images, or data files that direct how LLMs should process, analyze, and present the data. This creates "smart artifacts" like:
 
 [floodplain.html](examples/floodplain.html) - An interactive HTML poster of the open access paper "Floodplain inundation in the Murray–Darling Basin under current and future climate conditions." 
 ![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - saving the page](stdm1.gif)
@@ -18,6 +18,8 @@ STDM embeds structured instructions within documents, images, or data files that
 [floodplain.pdf](examples/floodplain.pdf) - An interactive PDF version 
 ![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - saving the page](stdm3.gif)
 ![Animated demonstration of the Self-Thinking Data Manifest ribbon and UI - using the page](stdm4.gif)
+
+STDM enabled data is capable of: 
 
 - Rendering interactive interfaces with custom navigation
 - Executing data analysis on embedded content
