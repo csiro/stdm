@@ -9,6 +9,8 @@ STDM is in early development. While it aims to enhance data utility and preserve
 
 ## What is STDM?
 
+[![Watch the demo](demo-thumbnail.png)](https://github.com/user-attachments/assets/ae6be487-7e8a-43c2-a050-d01f9dae3783)
+
 STDM embeds structured instructions within documents, images, or data files that direct how LLMs should process, analyze, and present the data. This creates "smart artifacts" like:
 
 [floodplain.html](examples/floodplain.html) - An interactive HTML poster of the open access paper "Floodplain inundation in the Murray–Darling Basin under current and future climate conditions." 
