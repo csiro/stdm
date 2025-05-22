@@ -9,7 +9,7 @@ STDM is in early development. While it aims to enhance data utility and preserve
 
 ## What is STDM?
 
-[![Watch the demo](demo-thumbnail.png)](https://github.com/user-attachments/assets/ae6be487-7e8a-43c2-a050-d01f9dae3783)
+[![Watch the demo](demo-thumbnail.png)](https://github.com/user-attachments/assets/33b2a815-1230-437a-98fb-f33064de25b9)
 
 STDM embeds structured instructions within documents, images, or data files that direct how LLMs should process, analyze, and present the data. This creates "smart artifacts" like:
 
