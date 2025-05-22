@@ -1,6 +1,6 @@
 # Self-Thinking Data Manifest (STDM)
 
-STDM enables data artifacts, including documents, to guide their own interpretation by Large Language Models (LLMs), creating interactive, self-directing experiences that preserve author intent while unlocking new analytical capabilities.
+[STDM](stdm_spec_v0.1.md) enables data artifacts, including documents, to guide their own interpretation by Large Language Models (LLMs), creating interactive, self-directing experiences that preserve author intent while unlocking new analytical capabilities.
 
 ## ⚠️ Caution
 
