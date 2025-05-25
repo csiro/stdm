@@ -4,8 +4,7 @@
 
 ## ⚠️ Caution
 
-The v0.1 specification details an experimental concept. Implementation requires consideration of the security principles outlined in sections 6.0, 7.1, and 7.6.
-STDM is in early development. While it aims to enhance data utility and preserve author intent, it involves directing LLM behavior which carries risks, including causing unexpected behaviour. The specification incorporates mitigation strategies, but the community should apply appropriate caution and security considerations.
+The v0.1 specification details an experimental concept. Implementation requires consideration of the security principles outlined in the specification. While STDM aims to enhance data utility and preserve author intent, it involves directing LLM behavior which carries risks, including causing unexpected behaviour. The specification incorporates mitigation strategies, but the community should apply appropriate caution and security considerations.
 
 ## What is STDM?
 
