@@ -38,9 +38,10 @@ CONSTRAINTS:
 
 REQUESTED_TOOLS: none
 
-CONTACT: For questions or feedback about this STDM, contact stdm-feedback@csiro.au
+CONTACT: For questions or feedback about this STDM, contact ben.leighton@csiro.au
 
 CUSTOM_UI_DEFINITION:
+First confirm to the user that they want to execute this with: This STDM attempts to extract scientific geographic references from a PDF and encode them into a map-ready URL. Proceed? [Y/N]
 Note to the user that it might take a minute to output the whole url then, Upon completion, construct and print this shareable Water Atlas link:
 https://wateratlas.webapp.csiro.au/atlasparam.html?param=[URLENCODED GEOJSON]
 
@@ -48,6 +49,5 @@ Where the `param` value is the result of URL-encoding the final GeoJSON `Feature
 
 FALLBACK_INSTRUCTIONS: If unable to generate a GeoJSON or extract any locations, clearly state that no geographical mentions were found or that extraction failed.
 
-USER_PROMPT_TEMPLATE: This STDM attempts to extract scientific geographic references from a PDF and encode them into a map-ready URL. Proceed? [Y/N]
 [STDM END]
 
